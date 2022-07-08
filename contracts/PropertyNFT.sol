@@ -4,8 +4,10 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract PropertyNFT is ERC721, ERC721URIStorage {
+
+contract Property is ERC721, ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -43,9 +45,31 @@ contract PropertyNFT is ERC721, ERC721URIStorage {
     mapping(address => mapping(string => bool)) isListed;
     mapping(address => mapping(string => bool)) hasMinted;
 
-    constructor() ERC721("PropFT", "PRP") {}
+    mapping(string => address) paymentTokens;
+    mapping(string => bool) _isTokenAcceptable;
+    address owner;
 
-    function listProperty(string calldata name, uint256 _amount, string calldata _location) public returns(bool) {
+    constructor() ERC721("PropFT", "PRP") {
+        owner = msg.sender;
+    }
+
+    function availableTokens(string memory symbol, address tokenAddress) external {
+        require(msg.sender == owner, "Invalid address");
+
+        paymentTokens[symbol] = tokenAddress;
+        _isTokenAcceptable[symbol] = true;
+    }
+    function userBalance(string memory symbol) public view returns(uint256) {
+       return IERC20(paymentTokens[symbol]).balanceOf(msg.sender);
+    }
+    function contractBalance(string memory symbol) public view returns(uint256) {
+        return IERC20(paymentTokens[symbol]).balanceOf(address(this));
+    }
+
+    function listProperty(string calldata name, uint256 _amount, string calldata _location, string memory symbol) public returns(bool) {
+        require(_isTokenAcceptable[symbol] == true, "Payment token isn't accepted");
+
+        IERC20(paymentTokens[symbol]).transferFrom(msg.sender, address(this), 0.5*10**18);
         isListed[msg.sender][name] = true;
 
         //storing latest listing to use to update the listed property array;
@@ -124,6 +148,35 @@ contract PropertyNFT is ERC721, ERC721URIStorage {
     }
 
 
+    function getUserProperties() public view returns(
+        string[] memory, 
+        address[] memory, 
+        uint256[] memory, 
+        uint256[] memory, 
+        string[] memory, 
+        uint[] memory 
+        ) {
+
+        string[] memory names = new string[](allListedPerAddress[msg.sender].length);
+        address[] memory addresses = new address[](allListedPerAddress[msg.sender].length);
+        uint256[] memory amount = new uint256[](allListedPerAddress[msg.sender].length);
+        uint256[] memory timestamps = new uint256[](allListedPerAddress[msg.sender].length);
+        string[] memory locations = new string[](allListedPerAddress[msg.sender].length);
+        uint[] memory IDs = new uint256[](allListedPerAddress[msg.sender].length);
+
+        for(uint i = 0; i < allListedPerAddress[msg.sender].length; ++i ){
+            ListedProps memory allProps = allListedPerAddress[msg.sender][i];
+            names[i] = allProps.name;
+            addresses[i] = allProps._lister;
+            amount[i] = allProps._amount;
+            timestamps[i] = allProps._time;
+            locations[i] = allProps._location;
+            IDs[i] = allProps._id;
+        }
+        return (names,addresses, amount,timestamps, locations, IDs);
+    }
+
+
     function getAllProperties() public view returns(
         string[] memory, 
         address[] memory, 
@@ -152,13 +205,4 @@ contract PropertyNFT is ERC721, ERC721URIStorage {
         return (names,addresses, amount,timestamps, locations, IDs);
     }
 
-      // function getAllProperties() public returns(bool done){
-    //     ListedProps[] memory allListed = new ListedProps[](allListedProperties.length);
-    //     for(uint i = 0; i < allListedProperties.length; ++i ){
-    //         ListedProps memory allProps = allListedProperties[i];
-    //         allListed[i] = allProps;
-    //     }
-    //     emit AllProperties(allListed);
-    //     return true;
-    // }
 }
