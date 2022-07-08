@@ -15,6 +15,13 @@ contract Property is ERC721, ERC721URIStorage {
     event Submitted(bool submitted);
     event Listed(string name, string location, string tokenURL);
 
+    modifier onlyOwner {
+        require(
+            msg.sender == owner,
+            "Only owner can call this function."
+        );
+        _;
+    }
 
     struct ListingProps {
         string name;
@@ -53,9 +60,7 @@ contract Property is ERC721, ERC721URIStorage {
         owner = msg.sender;
     }
 
-    function availableTokens(string memory symbol, address tokenAddress) external {
-        require(msg.sender == owner, "Invalid address");
-
+    function availableTokens(string memory symbol, address tokenAddress) external onlyOwner {
         paymentTokens[symbol] = tokenAddress;
         _isTokenAcceptable[symbol] = true;
     }
