@@ -110,6 +110,7 @@ export default function Navbar() {
           justify={{ base: "center", md: "start" }}
           alignItems="center"
         >
+          <Link href='/' _hover={{textDecoration: 'none'}}>
           <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             color={useColorModeValue("gray.800", "white")}
@@ -118,6 +119,8 @@ export default function Navbar() {
           >
             Nest Estate
           </Text>
+          </Link>
+         
         </Flex>
         <Flex display={{ base: "none", md: "flex" }} mr="6">
           <DesktopNav />
@@ -319,7 +322,7 @@ const NAV_ITEMS = [
   },
   {
     label: "List Property",
-    href: "#",
+    href: "/list-property",
   },
   {
     label: "Lease Property",
