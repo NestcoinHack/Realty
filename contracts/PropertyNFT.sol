@@ -10,8 +10,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract Property is ERC721, ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+    address owner;
+    address public constant nullAddress = 0x000000000000000000000000000000000000dEaD;
 
-    event AllProperties(ListedProps[] _a);
+    event AllProperties(ListedProps[] properties);
+    event CurrentUserProperties(ListedProps[] properties);
     event Submitted(bool submitted);
     event Listed(string name, string location, string tokenURL);
 
@@ -23,6 +26,20 @@ contract Property is ERC721, ERC721URIStorage {
         _;
     }
 
+    mapping(string => address) public paymentTokens;
+    mapping(string => bool) public _isTokenAcceptable;
+    mapping (uint256 => bool ) public _idExists;
+    mapping(address => mapping(string => bool)) isListed;
+    mapping(address => mapping(string => bool)) hasMinted;
+    mapping(address => uint256) public propertyID;
+    mapping(address => ListingProps) public listings;
+    mapping(address => ListedProps) public listed;
+    mapping(address => ListingProps[]) public allListingsPerAddress;
+    mapping(uint256 => ListedProps) public _trackListingsWithID;
+    mapping(address => ListedProps[]) public allListedPerAddress;
+    ListedProps[] public allListedProperties;
+    mapping(address => BoughtProps[]) public allBoughtPerAddress;
+
     struct ListingProps {
         string name;
         address _lister;
@@ -30,6 +47,7 @@ contract Property is ERC721, ERC721URIStorage {
         uint256 _time;
         string _location;
     }
+
     struct ListedProps {
         string name;
         address _lister;
@@ -37,30 +55,26 @@ contract Property is ERC721, ERC721URIStorage {
         uint256 _time;
         string _location;
         uint256 _id;
+        address _buyer;
     }
 
 
-    mapping(address => uint256) public propertyID;
-    mapping(address => ListingProps) public listings;
-    mapping(address => ListingProps[]) public allListingsPerAddress;
+    struct BoughtProps {
+        string name;
+        address originalLister;
+        uint256 _amount;
+        uint256 _time;
+        uint256 purchaseTime;
+        string _location;
+        uint256 _id;
+        address newOwner;
+    }
 
-    mapping(address => ListedProps) public listed;
-    mapping(address => ListedProps[]) public allListedPerAddress;
-
-    ListedProps[] public allListedProperties;
-
-    mapping(address => mapping(string => bool)) isListed;
-    mapping(address => mapping(string => bool)) hasMinted;
-
-    mapping(string => address) paymentTokens;
-    mapping(string => bool) _isTokenAcceptable;
-    address owner;
-
-    constructor() ERC721("PropFT", "PRP") {
+    constructor() ERC721("Props", "PRP") {
         owner = msg.sender;
     }
 
-    function availableTokens(string memory symbol, address tokenAddress) external onlyOwner {
+    function setPaymentTokens(string memory symbol, address tokenAddress) external onlyOwner {
         paymentTokens[symbol] = tokenAddress;
         _isTokenAcceptable[symbol] = true;
     }
@@ -100,6 +114,7 @@ contract Property is ERC721, ERC721URIStorage {
         require(isListed[msg.sender][_name], "Property has not been listed");
         require(!hasMinted[msg.sender][_name], "Propery has already been listed");
 
+
         address buyer = msg.sender;
         _tokenIds.increment();
 
@@ -107,9 +122,9 @@ contract Property is ERC721, ERC721URIStorage {
         _safeMint(buyer, newTokenId);
         _setTokenURI(newTokenId, _tokenURI);
         propertyID[buyer] = newTokenId;
+        _idExists[newTokenId] = true;
 
-
-        listed[buyer] = ListedProps(listings[buyer].name,listings[buyer]._lister,listings[buyer]._amount,listings[buyer]._time,listings[buyer]._location, propertyID[buyer] );
+        _trackListingsWithID[propertyID[buyer]] = ListedProps(listings[buyer].name,listings[buyer]._lister,listings[buyer]._amount,listings[buyer]._time,listings[buyer]._location, propertyID[buyer], nullAddress );
 
         //using the data stored in the struct in the listing propery to populate the array of approved listed property per address
         allListedPerAddress[msg.sender].push(
@@ -119,7 +134,8 @@ contract Property is ERC721, ERC721URIStorage {
                 listings[buyer]._amount,
                 listings[buyer]._time,
                 listings[buyer]._location, 
-                propertyID[buyer]
+                propertyID[buyer],
+                nullAddress
             )
         );
 
@@ -131,13 +147,58 @@ contract Property is ERC721, ERC721URIStorage {
                 listings[buyer]._amount,
                 listings[buyer]._time,
                 listings[buyer]._location, 
-                propertyID[buyer]
+                propertyID[buyer],
+                nullAddress
             )
         );
 
         hasMinted[msg.sender][_name] = true;
         emit Listed(_name, listings[buyer]._location, _tokenURI);
         return newTokenId;
+    }
+
+
+    function payForProperty(uint256 _id, string memory symbol) public{
+        require(_idExists[_id], "Props: Propery does not exist");
+        require( _trackListingsWithID[_id]._lister != msg.sender, "Props: Property already belongs to you");
+        require( _trackListingsWithID[_id]._buyer != msg.sender, "Props: Property already belongs to you");
+
+        require(IERC20(paymentTokens[symbol]).balanceOf(msg.sender) >=  _trackListingsWithID[_id]._amount, "Insufficient Funds");
+
+        require(IERC20(paymentTokens[symbol]).transferFrom(msg.sender, 
+            _trackListingsWithID[_id]._lister,  
+            _trackListingsWithID[_id]._amount
+        ), "Props : Cannot perform payment");
+
+        //transfer NFT to msg.sender
+        _transfer(_trackListingsWithID[_id]._lister, msg.sender, _id);
+
+        _trackListingsWithID[_id]._buyer = msg.sender;
+
+        allBoughtPerAddress[msg.sender].push(
+            BoughtProps(
+                _trackListingsWithID[_id].name,
+                _trackListingsWithID[_id]._lister,
+                _trackListingsWithID[_id]._amount,
+                _trackListingsWithID[_id]._time,
+                block.timestamp,
+                _trackListingsWithID[_id]._location, 
+                _trackListingsWithID[_id]._id,
+                msg.sender
+            )
+        );
+
+        for(uint256 i = 0; i < allListedPerAddress[_trackListingsWithID[_id]._lister].length; ++i) {
+            if(allListedPerAddress[_trackListingsWithID[_id]._lister][i]._id == _id) {
+                allListedPerAddress[_trackListingsWithID[_id]._lister][i]._buyer = msg.sender;
+            }
+        }
+
+        for(uint256 i = 0; i < allListedProperties.length; ++i) {
+            if(allListedProperties[i]._id == _id) {
+                allListedProperties[i]._buyer = msg.sender;
+            }
+        }
     }
 
     function tokensMinted() public view returns(uint256) {
@@ -153,21 +214,23 @@ contract Property is ERC721, ERC721URIStorage {
     }
 
 
-    function getUserProperties() public view returns(
+    function getMyListedProperties() public view returns(
         string[] memory, 
         address[] memory, 
         uint256[] memory, 
         uint256[] memory, 
         string[] memory, 
-        uint[] memory 
+        uint[] memory,
+        address[] memory
         ) {
-
+            
         string[] memory names = new string[](allListedPerAddress[msg.sender].length);
         address[] memory addresses = new address[](allListedPerAddress[msg.sender].length);
         uint256[] memory amount = new uint256[](allListedPerAddress[msg.sender].length);
         uint256[] memory timestamps = new uint256[](allListedPerAddress[msg.sender].length);
         string[] memory locations = new string[](allListedPerAddress[msg.sender].length);
         uint[] memory IDs = new uint256[](allListedPerAddress[msg.sender].length);
+        address[] memory buyers = new address[](allListedProperties.length);
 
         for(uint i = 0; i < allListedPerAddress[msg.sender].length; ++i ){
             ListedProps memory allProps = allListedPerAddress[msg.sender][i];
@@ -177,8 +240,43 @@ contract Property is ERC721, ERC721URIStorage {
             timestamps[i] = allProps._time;
             locations[i] = allProps._location;
             IDs[i] = allProps._id;
+            buyers[i] = allProps._buyer;
         }
-        return (names,addresses, amount,timestamps, locations, IDs);
+        return (names,addresses, amount,timestamps, locations, IDs, buyers);
+    }
+
+    function getMyPurchasedProperties() public view returns(
+        string[] memory, 
+        address[] memory, 
+        uint256[] memory, 
+        uint256[] memory, 
+        uint256[] memory,
+        string[] memory, 
+        uint[] memory,
+        address[] memory
+        ) {
+            
+        string[] memory names = new string[](allBoughtPerAddress[msg.sender].length);
+        address[] memory ogLister = new address[](allBoughtPerAddress[msg.sender].length);
+        uint256[] memory amount = new uint256[](allBoughtPerAddress[msg.sender].length);
+        uint256[] memory listingTime = new uint256[](allBoughtPerAddress[msg.sender].length);
+        uint256[] memory timeBought = new uint256[](allBoughtPerAddress[msg.sender].length);
+        string[] memory locations = new string[](allBoughtPerAddress[msg.sender].length);
+        uint[] memory IDs = new uint256[](allBoughtPerAddress[msg.sender].length);
+        address[] memory newOwner = new address[](allBoughtPerAddress[msg.sender].length);
+
+        for(uint i = 0; i < allBoughtPerAddress[msg.sender].length; ++i ){
+            BoughtProps memory allProps = allBoughtPerAddress[msg.sender][i];
+            names[i] = allProps.name;
+            ogLister[i] = allProps.originalLister;
+            amount[i] = allProps._amount;
+            listingTime[i] = allProps._time;
+            timeBought[i] = allProps.purchaseTime;
+            locations[i] = allProps._location;
+            IDs[i] = allProps._id;
+            newOwner[i] = allProps.newOwner;
+        }
+        return (names,ogLister, amount,listingTime,timeBought, locations, IDs,newOwner);
     }
 
 
@@ -188,7 +286,8 @@ contract Property is ERC721, ERC721URIStorage {
         uint256[] memory, 
         uint256[] memory, 
         string[] memory, 
-        uint[] memory 
+        uint[] memory,
+        address[] memory
         ) {
 
         string[] memory names = new string[](allListedProperties.length);
@@ -197,6 +296,8 @@ contract Property is ERC721, ERC721URIStorage {
         uint256[] memory timestamps = new uint256[](allListedProperties.length);
         string[] memory locations = new string[](allListedProperties.length);
         uint[] memory IDs = new uint256[](allListedProperties.length);
+        address[] memory buyers = new address[](allListedProperties.length);
+
 
         for(uint i = 0; i < allListedProperties.length; ++i ){
             ListedProps memory allProps = allListedProperties[i];
@@ -206,8 +307,8 @@ contract Property is ERC721, ERC721URIStorage {
             timestamps[i] = allProps._time;
             locations[i] = allProps._location;
             IDs[i] = allProps._id;
+            buyers[i] = allProps._buyer;
         }
-        return (names,addresses, amount,timestamps, locations, IDs);
+        return (names,addresses, amount,timestamps, locations, IDs, buyers); 
     }
-
 }
