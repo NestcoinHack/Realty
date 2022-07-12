@@ -11,6 +11,28 @@ require('dotenv').config();
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
+<<<<<<< HEAD
+  defaultNetwork: "hardhat",
+  networks: {
+    hardhat: {
+    }
+  },
+  solidity: {
+    version :"0.8.7",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  },
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts"
+  },
+=======
   solidity: "0.8.7",
   networks: {
     rinkeby: {
@@ -18,4 +40,5 @@ module.exports = {
       accounts: [process.env.WALLET_PRIVATE_KEY],
     },
   }
+>>>>>>> 24b0a117efdb375f96a74cd1342659ecb5598ba8
 };
