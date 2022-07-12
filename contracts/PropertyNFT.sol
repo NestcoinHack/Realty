@@ -29,8 +29,8 @@ contract Property is ERC721, ERC721URIStorage {
     mapping(string => address) public paymentTokens;
     mapping(string => bool) public _isTokenAcceptable;
     mapping (uint256 => bool ) public _idExists;
-    mapping(address => mapping(string => bool)) isListed;
-    mapping(address => mapping(string => bool)) hasMinted;
+    mapping(address => mapping(string => bool)) public isListed;
+    mapping(address => mapping(string => bool)) public hasMinted;
     mapping(address => uint256) public propertyID;
     mapping(address => ListingProps) public listings;
     mapping(address => ListedProps) public listed;
@@ -74,7 +74,7 @@ contract Property is ERC721, ERC721URIStorage {
         owner = msg.sender;
     }
 
-    function setPaymentTokens(string memory symbol, address tokenAddress) external onlyOwner {
+    function setPaymentToken(string memory symbol, address tokenAddress) external onlyOwner {
         paymentTokens[symbol] = tokenAddress;
         _isTokenAcceptable[symbol] = true;
     }
