@@ -77,7 +77,7 @@ contract SavingVault {
             msg.sender
         ][_savingId];
         require(
-            (updateSavings.amountSaved + _amount) <=
+            updateSavings.amountSaved  <=
                 updateSavings.propertyPrice,
             "savings is complete already"
         );
