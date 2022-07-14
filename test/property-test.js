@@ -47,9 +47,9 @@ describe("Property contract", function() {
   describe("Propery submission", function () {
     it("Should submit property", async function () {
 
-        console.log("\tBalance before submitting", `${Number(balb4)/decimals} TUSDT`)
-        console.log("\tBalance after submitting", `${Number(balAft)/decimals} TUSDT`)
-        console.log("\tPropery listed for", `${Number(balb4)/decimals - Number(balAft)/decimals} TUSDT`)
+        console.log("\tBalance before submitting:", `${Number(balb4)/decimals} TUSDT`)
+        console.log("\tBalance after submitting:", `${Number(balAft)/decimals} TUSDT`)
+        console.log("\tProperty listed for", `${Number(balb4)/decimals - Number(balAft)/decimals} TUSDT`)
 
         const isListed = await contract.isListed(owner.address, "TestProp");
         const hasMinted = await contract.hasMinted(owner.address, "TestProp");
@@ -76,6 +76,9 @@ describe("Property contract", function() {
       )
 
       const list = await contract.getMyListedProperties()
+      const listLength = list.length;
+
+      expect(listLength).to.equal(7)
       console.log("\n\tProperty name : ",list[0][0])
       console.log("\tProperty owner : ",list[1][0])
       console.log("\tProperty cost : ",`${Number(list[2][0])/decimals} TUSDT`)
@@ -87,4 +90,18 @@ describe("Property contract", function() {
       
     })
   });
+
+  describe("Property ownership", function () {
+    beforeEach(async function () {
+      await contract.mintNFT(
+        "someipfslink",
+        "TestProp"
+      )
+    })
+
+    it("Should pay for a property", async function() {
+      await contract.payForProperty(1, "USDT")
+    });
+  });
+
 });
