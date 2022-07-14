@@ -10,20 +10,24 @@ const main = async () => {
     const PropertyNftContractFactory = await hre.ethers.getContractFactory("Property");
     const PropertyNftContract = await PropertyNftContractFactory.deploy();
 
+    const SavingVaultContractFactory = await hre.ethers.getContractFactory("SavingVault");
+    const SavingVaultContract = await SavingVaultContractFactory.deploy();
+
     const TestToken = await hre.ethers.getContractFactory("TestToken");
     const tokenContract = await TestToken.deploy();
 
 
     await PropertyNftContract.deployed();
     await tokenContract.deployed();
-
+    await SavingVaultContract.deployed();
 
     const address = JSON.stringify({
       "contractAddress": PropertyNftContract.address,
     })
   
-    console.log("Property nft address: ", PropertyNftContract.address)
+    console.log("Property nft address: ", PropertyNftContract.address);
     console.log("Token address:", tokenContract.address);
+    console.log("SavingVaultContract", SavingVaultContract.address);
 
     console.log("account balance ", accountBalance.toString());
 
