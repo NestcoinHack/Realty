@@ -6,6 +6,7 @@ import {
   IconButton,
   Button,
   Stack,
+  Image,
   Collapse,
   Icon,
   Link,
@@ -13,7 +14,6 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -22,6 +22,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import Logo from "../assets/svg/1.svg"
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -111,14 +112,15 @@ export default function Navbar() {
           alignItems="center"
         >
           <Link href='/' _hover={{textDecoration: 'none'}}>
-          <Text
+          <Image src={Logo} alt="logo" h={{base:"40px", md:"70px" }} w="auto" ml={{base:"-30px", md:"0px"}}/>
+          {/*<Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             color={useColorModeValue("gray.800", "white")}
             fontSize={{ base: "20px", lg: "30px" }}
             fontWeight="bold"
           >
             Nest Estate
-          </Text>
+          </Text>*/}
           </Link>
          
         </Flex>
@@ -164,7 +166,7 @@ export default function Navbar() {
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue("gray.600", "gray.200");
-  const linkHoverColor = useColorModeValue("gray.800", "white");
+  // const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (

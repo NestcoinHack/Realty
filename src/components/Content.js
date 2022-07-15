@@ -8,7 +8,6 @@ import smartHouse from "../assets/Smart house.png";
 import estate from "../assets/estate-1.jpg";
 import propertyOne from "../assets/property-1.jpg";
 import propertyTwo from "../assets/property-2.jpg";
-import propertyThree from "../assets/property-3.jpg";
 
 const Content = () => {
   return (

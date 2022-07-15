@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Text, Image, Button, Link } from "@chakra-ui/react";
+import { Box, Flex, Text, Image } from "@chakra-ui/react";
 
 import hero from "../assets/hero.jpg";
 const Hero = () => {
