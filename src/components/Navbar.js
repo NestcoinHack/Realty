@@ -15,6 +15,7 @@ import {
   PopoverContent,
   useColorModeValue,
   useDisclosure,
+  useToast
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -25,6 +26,7 @@ import {
 import Logo from "../assets/svg/1.svg"
 
 export default function Navbar() {
+  const toast = useToast()
   const { isOpen, onToggle } = useDisclosure();
   const [currentAccount, setCurrentAccount] = useState("");
 
@@ -32,6 +34,14 @@ export default function Navbar() {
     try {
       const { ethereum } = window;
       if (!ethereum) {
+        toast({
+          title:"Opps!",
+          description:"You need to install metamask",
+          status:"error",
+          duration:1500,
+          variant:"subtle",
+          isClosable:true,
+        })
         console.log("you need to install metamask");
       } else {
         console.log("found one", ethereum);
@@ -43,9 +53,25 @@ export default function Navbar() {
       const accounts = await ethereum.request({ method: "eth_accounts" });
       if (accounts.length !== 0) {
         const account = accounts[0];
+        toast({
+          title:"Successful!",
+          description:"Connected to " + account,
+          status:"success",
+          duration:1500,
+          variant:"subtle",
+          isClosable:true,
+        })
         console.log("account ", account);
         setCurrentAccount(account);
       } else {
+        toast({
+          title:"Oppps!",
+          description:"You need to connect your metamask wallet",
+          status:"info",
+          duration:1500,
+          variant:"subtle",
+          isClosable:true,
+        })
         console.log("no authorized account found");
       }
     } catch (error) {
@@ -55,22 +81,52 @@ export default function Navbar() {
 
   //connect wallet with button click
   const connectWallet = async () => {
-    try {
-      const { ethereum } = window;
-      if (!ethereum) {
-        console.log("you need to install metamask");
-        return;
-      }
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
+      try {
+        const { ethereum } = window;
+        if (!ethereum) {
+          toast({
+            title:"Opps!",
+            description:"You need to install metamask",
+            status:"error",
+            duration:1500,
+            variant:"subtle",
+            isClosable:true,
+          })
+          console.log("you need to install metamask");
+          return;
+        }
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
 
-      console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]);
-    } catch (error) {
-      console.log(error);
-    }
+        console.log("Connected", accounts[0]);
+        toast({
+            title:"Successful!",
+            description:"Connected to " + accounts[0],
+            status:"success",
+            duration:1500,
+            variant:"subtle",
+            isClosable:true,
+          })
+        setCurrentAccount(accounts[0]);
+      } catch (error) {
+        console.log(error);
+      }
   };
+
+  //diconnect wallet with button click
+   const disconnectWallet = () => {
+     setCurrentAccount("");
+      toast({
+        title:"Disconnected",
+        description:"You need to connect to your metamask wallet",
+        status:"info",
+        duration:1500,
+        variant:"subtle",
+        isClosable:true,
+      })
+   }
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -150,6 +206,7 @@ export default function Navbar() {
               colorScheme="blue"
               cursor="auto"
               href={"#"}
+              onClick={() => disconnectWallet()}
             >
               {truncate(currentAccount)}
             </Button>
