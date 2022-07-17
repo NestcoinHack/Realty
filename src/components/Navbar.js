@@ -6,6 +6,7 @@ import {
   IconButton,
   Button,
   Stack,
+  Image,
   Collapse,
   Icon,
   Link,
@@ -13,8 +14,8 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useBreakpointValue,
   useDisclosure,
+  useToast
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -22,8 +23,10 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import Logo from "../assets/svg/1.svg"
 
 export default function Navbar() {
+  const toast = useToast()
   const { isOpen, onToggle } = useDisclosure();
   const [currentAccount, setCurrentAccount] = useState("");
 
@@ -31,6 +34,14 @@ export default function Navbar() {
     try {
       const { ethereum } = window;
       if (!ethereum) {
+        toast({
+          title:"Opps!",
+          description:"You need to install metamask",
+          status:"error",
+          duration:1500,
+          variant:"subtle",
+          isClosable:true,
+        })
         console.log("you need to install metamask");
       } else {
         console.log("found one", ethereum);
@@ -42,9 +53,25 @@ export default function Navbar() {
       const accounts = await ethereum.request({ method: "eth_accounts" });
       if (accounts.length !== 0) {
         const account = accounts[0];
+        toast({
+          title:"Successful!",
+          description:"Connected to " + account,
+          status:"success",
+          duration:1500,
+          variant:"subtle",
+          isClosable:true,
+        })
         console.log("account ", account);
         setCurrentAccount(account);
       } else {
+        toast({
+          title:"Oppps!",
+          description:"You need to connect your metamask wallet",
+          status:"info",
+          duration:1500,
+          variant:"subtle",
+          isClosable:true,
+        })
         console.log("no authorized account found");
       }
     } catch (error) {
@@ -54,22 +81,52 @@ export default function Navbar() {
 
   //connect wallet with button click
   const connectWallet = async () => {
-    try {
-      const { ethereum } = window;
-      if (!ethereum) {
-        console.log("you need to install metamask");
-        return;
-      }
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
+      try {
+        const { ethereum } = window;
+        if (!ethereum) {
+          toast({
+            title:"Opps!",
+            description:"You need to install metamask",
+            status:"error",
+            duration:1500,
+            variant:"subtle",
+            isClosable:true,
+          })
+          console.log("you need to install metamask");
+          return;
+        }
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
 
-      console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]);
-    } catch (error) {
-      console.log(error);
-    }
+        console.log("Connected", accounts[0]);
+        toast({
+            title:"Successful!",
+            description:"Connected to " + accounts[0],
+            status:"success",
+            duration:1500,
+            variant:"subtle",
+            isClosable:true,
+          })
+        setCurrentAccount(accounts[0]);
+      } catch (error) {
+        console.log(error);
+      }
   };
+
+  //diconnect wallet with button click
+   const disconnectWallet = () => {
+     setCurrentAccount("");
+      toast({
+        title:"Disconnected",
+        description:"You need to connect to your metamask wallet",
+        status:"info",
+        duration:1500,
+        variant:"subtle",
+        isClosable:true,
+      })
+   }
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -111,14 +168,15 @@ export default function Navbar() {
           alignItems="center"
         >
           <Link href='/' _hover={{textDecoration: 'none'}}>
-          <Text
+          <Image src={Logo} alt="logo" h={{base:"40px", md:"70px" }} w="auto" ml={{base:"-30px", md:"0px"}}/>
+          {/*<Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             color={useColorModeValue("gray.800", "white")}
             fontSize={{ base: "20px", lg: "30px" }}
             fontWeight="bold"
           >
             Nest Estate
-          </Text>
+          </Text>*/}
           </Link>
          
         </Flex>
@@ -148,6 +206,7 @@ export default function Navbar() {
               colorScheme="blue"
               cursor="auto"
               href={"#"}
+              onClick={() => disconnectWallet()}
             >
               {truncate(currentAccount)}
             </Button>
@@ -164,7 +223,7 @@ export default function Navbar() {
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue("gray.600", "gray.200");
-  const linkHoverColor = useColorModeValue("gray.800", "white");
+  // const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
