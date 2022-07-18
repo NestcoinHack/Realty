@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
-contract Property is ERC721, ERC721URIStorage {
+contract RealtyNFT is ERC721, ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     address owner;
@@ -46,6 +46,7 @@ contract Property is ERC721, ERC721URIStorage {
         uint256 _amount;
         uint256 _time;
         string _location;
+        string description;
     }
 
     struct ListedProps {
@@ -56,6 +57,7 @@ contract Property is ERC721, ERC721URIStorage {
         string _location;
         uint256 _id;
         address _buyer;
+        string description;
     }
 
 
@@ -68,9 +70,10 @@ contract Property is ERC721, ERC721URIStorage {
         string _location;
         uint256 _id;
         address newOwner;
+        string description;
     }
 
-    constructor() ERC721("Props", "PRP") {
+    constructor() ERC721("Realty", "RLT") {
         owner = msg.sender;
     }
 
@@ -85,14 +88,21 @@ contract Property is ERC721, ERC721URIStorage {
         return IERC20(paymentTokens[symbol]).balanceOf(address(this));
     }
 
-    function listProperty(string calldata name, uint256 _amount, string calldata _location, string memory symbol) public returns(bool) {
-        require(_isTokenAcceptable[symbol] == true, "Payment token isn't accepted");
+    function listProperty(
+        string calldata name, 
+        uint256 _amount, 
+        string calldata _location, 
+        string memory _symbol,
+        string memory _description
+    ) public returns(bool) {
+        require(_isTokenAcceptable[_symbol] == true, "Payment token isn't accepted");
 
-        IERC20(paymentTokens[symbol]).transferFrom(msg.sender, address(this), 0.5*10**18);
+        IERC20(paymentTokens[_symbol]).transferFrom(msg.sender, address(this), 0.5*10**18);
         isListed[msg.sender][name] = true;
 
+
         //storing latest listing to use to update the listed property array;
-        listings[msg.sender] = ListingProps(name, msg.sender, _amount, block.timestamp, _location);
+        listings[msg.sender] = ListingProps(name, msg.sender, _amount, block.timestamp, _location, _description);
 
         //storing all listings for retrieval just in case
         allListingsPerAddress[msg.sender].push(
@@ -101,7 +111,8 @@ contract Property is ERC721, ERC721URIStorage {
                 msg.sender,
                  _amount,
                 block.timestamp, 
-                _location
+                _location,
+                _description
             )
         );
 
@@ -124,7 +135,17 @@ contract Property is ERC721, ERC721URIStorage {
         propertyID[buyer] = newTokenId;
         _idExists[newTokenId] = true;
 
-        _trackListingsWithID[propertyID[buyer]] = ListedProps(listings[buyer].name,listings[buyer]._lister,listings[buyer]._amount,listings[buyer]._time,listings[buyer]._location, propertyID[buyer], nullAddress );
+        _trackListingsWithID[propertyID[buyer]] = 
+        ListedProps(
+            listings[buyer].name,
+            listings[buyer]._lister,
+            listings[buyer]._amount,
+            listings[buyer]._time,
+            listings[buyer]._location,
+            propertyID[buyer], 
+            nullAddress,
+            listings[buyer].description
+        );
 
         //using the data stored in the struct in the listing propery to populate the array of approved listed property per address
         allListedPerAddress[msg.sender].push(
@@ -135,7 +156,8 @@ contract Property is ERC721, ERC721URIStorage {
                 listings[buyer]._time,
                 listings[buyer]._location, 
                 propertyID[buyer],
-                nullAddress
+                nullAddress,
+                listings[buyer].description
             )
         );
 
@@ -148,7 +170,8 @@ contract Property is ERC721, ERC721URIStorage {
                 listings[buyer]._time,
                 listings[buyer]._location, 
                 propertyID[buyer],
-                nullAddress
+                nullAddress,
+                listings[buyer].description
             )
         );
 
@@ -184,10 +207,12 @@ contract Property is ERC721, ERC721URIStorage {
                 block.timestamp,
                 _trackListingsWithID[_id]._location, 
                 _trackListingsWithID[_id]._id,
-                msg.sender
+                msg.sender,
+                _trackListingsWithID[_id].description
             )
         );
 
+        //updating the buyer address from a null address to the buyers address
         for(uint256 i = 0; i < allListedPerAddress[_trackListingsWithID[_id]._lister].length; ++i) {
             if(allListedPerAddress[_trackListingsWithID[_id]._lister][i]._id == _id) {
                 allListedPerAddress[_trackListingsWithID[_id]._lister][i]._buyer = msg.sender;
@@ -213,102 +238,5 @@ contract Property is ERC721, ERC721URIStorage {
         return super.tokenURI(_tokenId);
     }
 
-
-    function getMyListedProperties() public view returns(
-        string[] memory, 
-        address[] memory, 
-        uint256[] memory, 
-        uint256[] memory, 
-        string[] memory, 
-        uint[] memory,
-        address[] memory
-        ) {
-            
-        string[] memory names = new string[](allListedPerAddress[msg.sender].length);
-        address[] memory addresses = new address[](allListedPerAddress[msg.sender].length);
-        uint256[] memory amount = new uint256[](allListedPerAddress[msg.sender].length);
-        uint256[] memory timestamps = new uint256[](allListedPerAddress[msg.sender].length);
-        string[] memory locations = new string[](allListedPerAddress[msg.sender].length);
-        uint[] memory IDs = new uint256[](allListedPerAddress[msg.sender].length);
-        address[] memory buyers = new address[](allListedProperties.length);
-
-        for(uint i = 0; i < allListedPerAddress[msg.sender].length; ++i ){
-            ListedProps memory allProps = allListedPerAddress[msg.sender][i];
-            names[i] = allProps.name;
-            addresses[i] = allProps._lister;
-            amount[i] = allProps._amount;
-            timestamps[i] = allProps._time;
-            locations[i] = allProps._location;
-            IDs[i] = allProps._id;
-            buyers[i] = allProps._buyer;
-        }
-        return (names,addresses, amount,timestamps, locations, IDs, buyers);
-    }
-
-    function getMyPurchasedProperties() public view returns(
-        string[] memory, 
-        address[] memory, 
-        uint256[] memory, 
-        uint256[] memory, 
-        uint256[] memory,
-        string[] memory, 
-        uint[] memory,
-        address[] memory
-        ) {
-            
-        string[] memory names = new string[](allBoughtPerAddress[msg.sender].length);
-        address[] memory ogLister = new address[](allBoughtPerAddress[msg.sender].length);
-        uint256[] memory amount = new uint256[](allBoughtPerAddress[msg.sender].length);
-        uint256[] memory listingTime = new uint256[](allBoughtPerAddress[msg.sender].length);
-        uint256[] memory timeBought = new uint256[](allBoughtPerAddress[msg.sender].length);
-        string[] memory locations = new string[](allBoughtPerAddress[msg.sender].length);
-        uint[] memory IDs = new uint256[](allBoughtPerAddress[msg.sender].length);
-        address[] memory newOwner = new address[](allBoughtPerAddress[msg.sender].length);
-
-        for(uint i = 0; i < allBoughtPerAddress[msg.sender].length; ++i ){
-            BoughtProps memory allProps = allBoughtPerAddress[msg.sender][i];
-            names[i] = allProps.name;
-            ogLister[i] = allProps.originalLister;
-            amount[i] = allProps._amount;
-            listingTime[i] = allProps._time;
-            timeBought[i] = allProps.purchaseTime;
-            locations[i] = allProps._location;
-            IDs[i] = allProps._id;
-            newOwner[i] = allProps.newOwner;
-        }
-        return (names,ogLister, amount,listingTime,timeBought, locations, IDs,newOwner);
-    }
-
-
-    function getAllProperties() public view returns(
-        string[] memory, 
-        address[] memory, 
-        uint256[] memory, 
-        uint256[] memory, 
-        string[] memory, 
-        uint[] memory,
-        address[] memory
-        ) {
-
-        string[] memory names = new string[](allListedProperties.length);
-        address[] memory addresses = new address[](allListedProperties.length);
-        uint256[] memory amount = new uint256[](allListedProperties.length);
-        uint256[] memory timestamps = new uint256[](allListedProperties.length);
-        string[] memory locations = new string[](allListedProperties.length);
-        uint[] memory IDs = new uint256[](allListedProperties.length);
-        address[] memory buyers = new address[](allListedProperties.length);
-
-
-        for(uint i = 0; i < allListedProperties.length; ++i ){
-            ListedProps memory allProps = allListedProperties[i];
-            names[i] = allProps.name;
-            addresses[i] = allProps._lister;
-            amount[i] = allProps._amount;
-            timestamps[i] = allProps._time;
-            locations[i] = allProps._location;
-            IDs[i] = allProps._id;
-            buyers[i] = allProps._buyer;
-        }
-        return (names,addresses, amount,timestamps, locations, IDs, buyers); 
-    }
+    
 }

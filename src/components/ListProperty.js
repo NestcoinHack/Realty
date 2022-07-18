@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import {Box, Input, Text, Button, Center} from '@chakra-ui/react'
-import Navbar from './Navbar'
 import {ethers} from 'ethers'
 import abi from "../utils/ListProperty.json";
 
@@ -42,8 +41,7 @@ const handleSubmit = (e) => {
 }
 
     return(
-        <Box h='100vh'>
-            <Navbar />
+        <Box minH='100vh'>
             <Text
             fontSize={{ base: "25px", md: "38px", lg: "42px" }}
             color="blue.400"
