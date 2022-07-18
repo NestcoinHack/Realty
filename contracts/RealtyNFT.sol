@@ -47,6 +47,7 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
         uint256 _time;
         string _location;
         string description;
+        string _cid;
     }
 
     struct ListedProps {
@@ -58,6 +59,7 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
         uint256 _id;
         address _buyer;
         string description;
+        string _cid;
     }
 
 
@@ -71,6 +73,7 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
         uint256 _id;
         address newOwner;
         string description;
+        string _cid;
     }
 
     constructor() ERC721("Realty", "RLT") {
@@ -93,7 +96,8 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
         uint256 _amount, 
         string calldata _location, 
         string memory _symbol,
-        string memory _description
+        string memory _description,
+        string memory _cid
     ) public returns(bool) {
         require(_isTokenAcceptable[_symbol] == true, "Payment token isn't accepted");
 
@@ -102,7 +106,7 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
 
 
         //storing latest listing to use to update the listed property array;
-        listings[msg.sender] = ListingProps(name, msg.sender, _amount, block.timestamp, _location, _description);
+        listings[msg.sender] = ListingProps(name, msg.sender, _amount, block.timestamp, _location, _description, _cid);
 
         //storing all listings for retrieval just in case
         allListingsPerAddress[msg.sender].push(
@@ -112,7 +116,8 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
                  _amount,
                 block.timestamp, 
                 _location,
-                _description
+                _description,
+                _cid
             )
         );
 
@@ -121,7 +126,7 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
 
     }
 
-    function mintNFT(string memory _tokenURI, string memory _name)  public returns (uint256) {
+    function mintNFT( string memory _name)  public returns (uint256) {
         require(isListed[msg.sender][_name], "Property has not been listed");
         require(!hasMinted[msg.sender][_name], "Propery has already been listed");
 
@@ -131,7 +136,7 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
 
         uint256 newTokenId = _tokenIds.current();
         _safeMint(buyer, newTokenId);
-        _setTokenURI(newTokenId, _tokenURI);
+        _setTokenURI(newTokenId, listings[buyer]._cid);
         propertyID[buyer] = newTokenId;
         _idExists[newTokenId] = true;
 
@@ -144,7 +149,8 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
             listings[buyer]._location,
             propertyID[buyer], 
             nullAddress,
-            listings[buyer].description
+            listings[buyer].description,
+            listings[buyer]._cid
         );
 
         //using the data stored in the struct in the listing propery to populate the array of approved listed property per address
@@ -157,7 +163,8 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
                 listings[buyer]._location, 
                 propertyID[buyer],
                 nullAddress,
-                listings[buyer].description
+                listings[buyer].description,
+                listings[buyer]._cid
             )
         );
 
@@ -171,12 +178,13 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
                 listings[buyer]._location, 
                 propertyID[buyer],
                 nullAddress,
-                listings[buyer].description
+                listings[buyer].description,
+                listings[buyer]._cid
             )
         );
 
         hasMinted[msg.sender][_name] = true;
-        emit Listed(_name, listings[buyer]._location, _tokenURI);
+        emit Listed(_name, listings[buyer]._location, listings[buyer]._cid);
         return newTokenId;
     }
 
@@ -208,7 +216,8 @@ contract RealtyNFT is ERC721, ERC721URIStorage {
                 _trackListingsWithID[_id]._location, 
                 _trackListingsWithID[_id]._id,
                 msg.sender,
-                _trackListingsWithID[_id].description
+                _trackListingsWithID[_id].description,
+                _trackListingsWithID[_id]._cid
             )
         );
 

@@ -30,7 +30,8 @@ describe("Property contract", function() {
         saleAmount,
         "Trenches",
         "TUSDT",
-        "Well furnished 2bedroom whatever"
+        "Well furnished 2bedroom whatever",
+        "some_ipfs_link"
     )
     const balAft = await tokenContract.balanceOf(owner.address)
 
@@ -66,7 +67,6 @@ describe("Property contract", function() {
       const { contract, owner} = await loadFixture(Propss);
 
         await contract.mintNFT(
-          "someipfslink",
           "TestProp"
         )
         const hasMinted = await contract.hasMinted(owner.address, "TestProp");
@@ -79,7 +79,6 @@ describe("Property contract", function() {
       const { contract, decimals } = await loadFixture(Propss);
 
       await contract.mintNFT(
-        "someipfslink",
         "TestProp"
       )
 
@@ -90,12 +89,15 @@ describe("Property contract", function() {
       console.log("\n\tProperty name : ",list[0][0])
       console.log("\tProperty owner : ",list[1][0])
       console.log("\tProperty cost : ",`${Number(list[2][0])/decimals} TUSDT`)
-      console.log("\tListing time : ",list[3][0].toBigInt())
-      console.log("\tProperty ID : ",Number(list[4][0]))
-      console.log("\tProperty location : ",list[5][0])
-      console.log("\tProperty description : ",list[6][0])
+      console.log("\tProperty ID : ",Number(list[3][0]))
+      console.log("\tProperty location : ",list[4][0])
+      console.log("\tProperty description : ",list[5][0])
       list[6][0].toString() === "0x000000000000000000000000000000000000dEaD" ? 
-      console.log("\tPuchased? : Not yet") : console.log("Bought by:",list[7][0])
+      console.log("\tPuchased? : Not yet") : console.log("Bought by:",list[6][0])
+      console.log("\tProperty cid : ",list[7][0])
+
+      
+
       
     })
   
@@ -103,7 +105,6 @@ describe("Property contract", function() {
       const { contract, addr1, owner, tokenContract, decimals, saleAmount } = await loadFixture(Propss);
 
       await contract.connect(owner).mintNFT(
-        "someipfslink",
         "TestProp"
       )
       const list = await contract.connect(owner).getMyListedProperties()
@@ -118,7 +119,7 @@ describe("Property contract", function() {
       const bal = await tokenContract.connect(addr1).balanceOf(addr1.address)
       console.log("\tbalance before payment : ",`${bal/decimals} USDT`)
 
-      await contract.connect(addr1).payForProperty(Number(list[4][0]), "TUSDT")
+      await contract.connect(addr1).payForProperty(Number(list[3][0]), "TUSDT")
       const balAfter = await tokenContract.connect(addr1).balanceOf(addr1.address)
 
       console.log("\tbalance after payment : ",`${balAfter/decimals} TUSDT`)
