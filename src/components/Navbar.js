@@ -376,6 +376,10 @@ const MobileNavItem = ({ label, children, href }) => {
 
 const NAV_ITEMS = [
   {
+    label: "Set Payment Token",
+    href: "/set-payment-token",
+  },
+  {
     label: "Featured Property",
     href: "#",
   },
