@@ -13,9 +13,9 @@ require('solidity-coverage')
  */
 
 const { API_URL, PRIVATE_KEY } = process.env;
-
+const defaultNetwork = "polygon_mumbai"
 module.exports = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: `${defaultNetwork}`,
   networks: {
     hardhat: {},
     polygon_mumbai: {
