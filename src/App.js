@@ -5,6 +5,8 @@ import ListProperty from "./components/ListProperty";
 import { Box } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import SetPaymentToken from "./components/SetPaymentToken";
+import Admin from "./components/Admin"
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="set-payment-token" element={<SetPaymentToken />} />
           <Route path="list-property" element={<ListProperty />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
         <Footer />
       </BrowserRouter>

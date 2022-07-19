@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require('dotenv').config();
+require('solidity-coverage')
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -12,9 +13,11 @@ require('dotenv').config();
  */
 
 const { API_URL, PRIVATE_KEY } = process.env;
+const defaultNetwork = "polygon_mumbai"
+// const defaultNetwork = "hardhat"
 
 module.exports = {
-  defaultNetwork: "polygon_mumbai",
+  defaultNetwork: `${defaultNetwork}`,
   networks: {
     hardhat: {},
     polygon_mumbai: {
