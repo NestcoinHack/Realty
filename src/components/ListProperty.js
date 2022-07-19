@@ -131,7 +131,7 @@ const ListProperty = () => {
                         description:'',
                         location:'',
                         amount:0,
-                        token:'',
+                        symbol:'',
                         imageUrl: imageUrl
                     }}
                     validationSchema={validationSchema}
