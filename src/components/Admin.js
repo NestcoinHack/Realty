@@ -9,8 +9,6 @@ import Input from './Input';
 import { BsHouseDoor } from "react-icons/bs";
 import { GiToken } from "react-icons/gi"
 import SellImg from "../assets/svg/sell-house.svg"
-import Logo from "../assets/svg/1.svg";
-
 
 const Admin = () => {
 

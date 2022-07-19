@@ -2,7 +2,9 @@ import React, {useState} from 'react'
 import {Box, Button, Flex, Image, Heading, Text, useDisclosure, useToast} from '@chakra-ui/react'
 import {ethers} from 'ethers'
 import contractAddress from "../contracts/contract_address.json"
+import tokenAddress from "../contracts/token_address.json"
 import abi from "../contracts/abi.json";
+import tokenAbi from "../contracts/token_abi.json"
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import Input, { Select, TextArea } from './Input';
@@ -49,18 +51,20 @@ const ListProperty = () => {
 
     const approve = async () => {
         setLoading(true)
-        const amount = document.getElementById("amount").value
+        let amount = document.getElementById("amount").value
+        amount =  ethers.utils.parseEther(amount)
+
         try {
           const { ethereum } = window;
           if (ethereum) {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
-            const PropertyNftContract = new ethers.Contract(
-              contractAddress.contractAddress,
-              abi.abi,
+            const TokenContract = new ethers.Contract(
+              tokenAddress.contractAddress,
+              tokenAbi.abi,
               signer
             );
-            let approval = await PropertyNftContract.approve(contractAddress.contractAddress, amount * (10 ** 18) );
+            let approval = await TokenContract.approve(tokenAddress.contractAddress, amount );
                 
             await approval.wait();
             setIsApproved(true)
@@ -73,13 +77,16 @@ const ListProperty = () => {
               isClosable:true,
             })
             setLoading(false)
+            onClose()
           } else {
             console.log("ethereum object does not exist!");
             setLoading(false)
+            onClose()
           }
         } catch (error) {
           console.log(error);
           setLoading(false)
+          onClose()
         }
     };
 
@@ -212,7 +219,7 @@ const ListProperty = () => {
                                 <Flex mb={3} mt={5} justify="space-around">
                                     <Button 
                                         colorScheme="blue.400" 
-                                        isDisabled={Object.keys(errors).length > 0 || imageUrl || isApproved ? true : false}
+                                        isDisabled={Object.keys(errors).length > 0 || imageUrl=== "" || isApproved ? true : false}
                                         variant="outline"
                                         onClick={onOpen}
                                         w="45%"
@@ -224,7 +231,7 @@ const ListProperty = () => {
                                         bg="blue.400" 
                                         color="white"
                                         isLoading={isSubmitting}
-                                        isDisabled={Object.keys(errors).length > 0 || imageUrl || !isApproved === "" ? true : false}
+                                        isDisabled={Object.keys(errors).length > 0 || imageUrl === ""  || !isApproved ? true : false}
                                         type="submit" 
                                         w="45%"
                                     >
