@@ -64,7 +64,7 @@ const ListProperty = () => {
               tokenAbi.abi,
               signer
             );
-            let approval = await TokenContract.approve(tokenAddress.contractAddress, amount );
+            let approval = await TokenContract.approve(contractAddress.contractAddress, amount );
                 
             await approval.wait();
             setIsApproved(true)
@@ -158,12 +158,17 @@ const ListProperty = () => {
                               variant:"subtle",
                               isClosable:true,
                             })
+
+                            resetForm()
+                            setImageUrl("")
                             
                           } else {
                             console.log("ethereum object does not exist!");
                           }
                         } catch (error) {
                           console.log(error);
+                          resetForm()
+                          setImageUrl("")
                         }
                 
                     }}
