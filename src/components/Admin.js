@@ -45,7 +45,7 @@ const Admin = () => {
                 borderTopLeftRadius={{ base: '0px', md: '10px' }}
                 borderBottomLeftRadius={{ base: '0px', md: '10px' }}
             >
-                <Image w={{ base: '70%', md: '100%' }} h="100%" src={SellImg} />
+                <Image w={{ base: '100%', md: '100%' }} h="100%" src={SellImg} />
             </Box>
             <Box
                 w={{ base: '100%', md: '50%' }}
@@ -103,8 +103,8 @@ const Admin = () => {
                 >
                     {({ errors, isSubmitting, setFieldValue }) => (
                         <Form>
-                            <Heading fontWeight="700" fontSize="25px" mb={5} color="blue.400" display="flex">
-                                Send tokens to a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/> user
+                            <Heading fontWeight="700" fontSize={{base:"22px", md:"25px"}} mb={5} color="blue.400" display="flex">
+                                Send tokens 
                             </Heading>
                             <Box textAlign="left">
                                 <Input

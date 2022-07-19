@@ -101,7 +101,7 @@ const ListProperty = () => {
                 borderTopLeftRadius={{ base: '0px', md: '10px' }}
                 borderBottomLeftRadius={{ base: '0px', md: '10px' }}
             >
-                <Image w={{ base: '70%', md: '100%' }} h="100%" src={SellImg} />
+                <Image w={{ base: '100%', md: '100%' }} h="100%" src={SellImg} />
             </Box>
             <Box
                 w={{ base: '100%', md: '50%' }}
@@ -111,8 +111,8 @@ const ListProperty = () => {
                 borderBottomRightRadius={{ base: '0px', md: '10px' }}
             >
                 {!imageUrl ? <Box minH="50vh">
-                    <Heading fontWeight="700" fontSize="25px" mb={10} color="blue.400" display="flex">
-                        Become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/>  Agent
+                    <Heading fontWeight="700" fontSize={{base:"20px", md:"25px"}} mb={10} color="blue.400" display="flex">
+                        Become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/>  agent
                     </Heading>
                     <Text mb={5} fontWeight="700">Upload property picture</Text>
                     <ImageUpload setUrl={setImageUrl}/>
@@ -163,8 +163,8 @@ const ListProperty = () => {
                 >
                     {({ errors, isSubmitting, setFieldValue }) => (
                         <Form>
-                            <Heading fontWeight="700" fontSize="25px" mb={5} color="blue.400" display="flex">
-                                Become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/>  Agent
+                            <Heading fontWeight="700" fontSize={{base:"20px", md:"25px"}} mb={5} color="blue.400" display="flex">
+                                Become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/>  agent
                             </Heading>
                             <Box textAlign="left">
                                 <Input
