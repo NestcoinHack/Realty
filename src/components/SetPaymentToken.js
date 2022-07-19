@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
 import {Box, Input, Text, Button, Center} from '@chakra-ui/react'
 import {ethers} from 'ethers'
-import abi from "../utils/ListProperty.json";
+import contractAddr from '../contracts/contract_address.json'
+import abi from '../contracts/abi.json'
 
 const SetPaymentToken = () => {
     const [symbol, setSymbol] = useState('')
     const [tokenAddress, setTokenAddress] = useState('')
 
-    const contractAddress = '0x72D46b82d5cF4c6E0EE74f53371757A59f610C28'
     const contractABI = abi.abi;
 
     const setPaymentToken = async () => {
@@ -17,7 +17,7 @@ const SetPaymentToken = () => {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const PropertyNftContract = new ethers.Contract(
-              contractAddress,
+              contractAddr.contractAddress,
               contractABI,
               signer
             );
