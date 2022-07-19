@@ -169,14 +169,7 @@ export default function Navbar() {
         >
           <Link href='/' _hover={{textDecoration: 'none'}}>
           <Image src={Logo} alt="logo" h={{base:"40px", md:"70px" }} w="auto" ml={{base:"-30px", md:"0px"}}/>
-          {/*<Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            color={useColorModeValue("gray.800", "white")}
-            fontSize={{ base: "20px", lg: "30px" }}
-            fontWeight="bold"
-          >
-            Nest Estate
-          </Text>*/}
+          
           </Link>
          
         </Flex>
@@ -380,15 +373,16 @@ const NAV_ITEMS = [
     href: "/set-payment-token",
   },
   {
-    label: "Featured Property",
-    href: "#",
+    label: "Featured Properties",
+    href: "/properties",
   },
   {
     label: "List Property",
     href: "/list-property",
   },
-  {
-    label: "Lease Property",
-    href: "#",
-  },
-];
+  ]
+//   {
+//     label: "Lease Property",
+//     href: "#",
+//   },
+// ];

@@ -14,6 +14,7 @@ import { GiToken } from "react-icons/gi"
 import SellImg from "../assets/svg/sell-house.svg"
 import { ImageUpload } from "react-ipfs-uploader"
 import ApproveModal from "./ApproveModal"
+import MintModal from "./MintModal"
 import Logo from "../assets/svg/1.svg";
 
 
@@ -47,7 +48,18 @@ const ListProperty = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [ isApproved, setIsApproved] = useState(false)
     const [ loading, setLoading] = useState(false)
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isMintLoading, setIsMintLoading] = useState(false)
+
+    const {
+        isOpen: isOpenModal,
+        onOpen: onOpenModal,
+        onClose: onCloseModal,
+      } = useDisclosure();
+    const {
+        isOpen: isMintOpen,
+        onOpen: onMintOpen,
+        onClose: onMintClose,
+      } = useDisclosure();
 
     const approve = async () => {
         setLoading(true)
@@ -77,18 +89,60 @@ const ListProperty = () => {
               isClosable:true,
             })
             setLoading(false)
-            onClose()
+            onCloseModal()
           } else {
             console.log("ethereum object does not exist!");
             setLoading(false)
-            onClose()
+            onCloseModal()
           }
         } catch (error) {
           console.log(error);
           setLoading(false)
-          onClose()
+          onCloseModal()
         }
     };
+
+    const mint = async() => {
+        setIsMintLoading(true)
+        let name = document.getElementById("name").value
+        console.log(name)
+        try {
+          const { ethereum } = window;
+          if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const PropertyNftContract = new ethers.Contract(
+              contractAddress.contractAddress,
+              abi.abi,
+              signer
+            );
+            let nft = await PropertyNftContract.mintNFT(name);
+                                
+            await nft.wait();
+            toast({
+              title:"Great!",
+              description:"You property is now an NFT",
+              status:"success",
+              duration:1500,
+              variant:"subtle",
+              isClosable:true,
+            })
+            setIsMintLoading(false)
+            onMintClose()
+            setImageUrl("")
+          } else {
+            console.log("ethereum object does not exist!");
+            setIsMintLoading(false)
+            onMintClose()
+            setImageUrl("")
+          }
+        } catch (error) {
+          console.log(error);
+          setIsMintLoading(false)
+            onMintClose()
+            setImageUrl("")
+        }
+    }
 
     return (
         <>
@@ -158,18 +212,19 @@ const ListProperty = () => {
                               variant:"subtle",
                               isClosable:true,
                             })
-
-                            resetForm()
-                            setImageUrl("")
+                            onMintOpen()
                             
                           } else {
                             console.log("ethereum object does not exist!");
+                            resetForm()
+                            setImageUrl("")
                           }
                         } catch (error) {
                           console.log(error);
                           resetForm()
                           setImageUrl("")
                         }
+                        
                 
                     }}
                 >
@@ -226,7 +281,7 @@ const ListProperty = () => {
                                         colorScheme="blue.400" 
                                         isDisabled={Object.keys(errors).length > 0 || imageUrl=== "" || isApproved ? true : false}
                                         variant="outline"
-                                        onClick={onOpen}
+                                        onClick={onOpenModal}
                                         w="45%"
                                     >
                                         {' '}
@@ -252,7 +307,8 @@ const ListProperty = () => {
                 }
             </Box>
         </Flex>
-        <ApproveModal isOpen={isOpen} onClose={onClose} approve={approve} loading={loading}/>
+        <ApproveModal isOpen={isOpenModal} onClose={onCloseModal} approve={approve} loading={loading}/>
+        <MintModal isOpen={isMintOpen} onClose={onMintClose} mint={mint} loading={isMintLoading} />
         </>
     )
 }

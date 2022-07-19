@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SetPaymentToken from "./components/SetPaymentToken";
 import Admin from "./components/Admin"
+import Properties from "./components/Properties"
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="set-payment-token" element={<SetPaymentToken />} />
           <Route path="list-property" element={<ListProperty />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/properties" element={<Properties />} />
         </Routes>
         <Footer />
       </BrowserRouter>
