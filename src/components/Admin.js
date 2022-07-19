@@ -1,8 +1,8 @@
 import React from 'react'
 import {Box, Button, Flex, Image, Heading, useToast} from '@chakra-ui/react'
 import {ethers} from 'ethers'
-import contractAddress from "../contracts/contract_address.json"
-import abi from "../contracts/abi.json";
+import tokenAddress from "../contracts/token_address.json"
+import tokenAbi from '../contracts/token_abi.json'
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import Input from './Input';
@@ -67,12 +67,20 @@ const Admin = () => {
                           if (ethereum) {
                             const provider = new ethers.providers.Web3Provider(ethereum);
                             const signer = provider.getSigner();
-                            const PropertyNftContract = new ethers.Contract(
-                              contractAddress.contractAddress,
-                              abi.abi,
+                            const contract = new ethers.Contract(
+                              tokenAddress.contractAddress,
+                              tokenAbi.abi,
                               signer
                             );
-                            let send = await PropertyNftContract.transfer(values.address, values.amount * (10 ** 18));
+                            let value = values.amount * 10 ** 18
+                            let amount = ethers.utils.parseUnits(`${value.toString()}`, 18)
+                            // let balance = await contract.balanceOf();
+
+                            console.log("amount", value)
+                            console.log("e", amount)
+
+                            
+                            let send = await contract.transfer(values.address, amount);
                                 
                             await send.wait();
                             toast({
