@@ -7,6 +7,9 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 
     - NFTs are used for verifying listed assets authenticity on Realty and also as proof of ownership of an asset within Realty.
 
+## Project Video Demo
+
+
 ## Contract Flow
 - listProperty : to submit an asset for listing 
 - approval : this should be done right before listProperty to give allowance to the Realty contract to transfer 0.5 of the stablecoin to Realty as a listing fee.
