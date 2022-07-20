@@ -18,7 +18,7 @@ const Hero = () => {
             color="blue.400"
             fontWeight="bold"
           >
-            Helping you find the property of your dreams.
+            Helping you find the property of your dreams on the blockchain.
           </Text>
           <Text mt="4">
             Creating quality urban lifestyles,building stronger communities

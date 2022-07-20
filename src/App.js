@@ -9,6 +9,7 @@ import SetPaymentToken from "./components/SetPaymentToken";
 import Admin from "./components/Admin"
 import Properties from "./components/Properties"
 import Save from "./components/Save";
+import AdminOverview from "./components/AdminOverview"
 
 function App() {
   const toast = useToast()
@@ -125,12 +126,12 @@ function App() {
         <Navbar currentAccount={currentAccount} connectWallet={connectWallet} disconnectWallet={disconnectWallet}/>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="set-payment-token" element={<SetPaymentToken />} />
+          <Route path="/admin/set-payment-token" element={<SetPaymentToken />} />
           <Route path="list-property" element={<ListProperty />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/send-token" element={<Admin />} />
           <Route path="/properties" element={<Properties currentAccount={currentAccount}/>} />
           <Route path="/save-to-buy" element={<Save/>} />
-
+          <Route path="/admin" element={<AdminOverview/>}/>
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import Input from './Input';
 import { BsHouseDoor } from "react-icons/bs";
 import { GiToken } from "react-icons/gi"
-import SellImg from "../assets/svg/sell-house.svg"
+import SellImg from "../assets/svg/buy-house.svg"
 
 const Admin = () => {
 

@@ -29,7 +29,7 @@ const ListProperty = () => {
         description: yup
           .string()
           .min(3, "Must be at least 3 characters")
-          .max(500, "Must be at less than 500 characters")
+          .max(150, "Must be at less than 150 characters")
           .required("Description is required"),
         location: yup
           .string()
@@ -294,7 +294,7 @@ const ListProperty = () => {
                                   name="description"
                                   id="description"
                                   type="text"
-                                  placeholder="Description"
+                                  placeholder="Description (150 character allowed)"
                                 />
 
                                 <Input
@@ -316,7 +316,7 @@ const ListProperty = () => {
                                 />
 
                                 <Select label="Token type" name="symbol" id="symbol">
-                                    <option value="">Select Token type</option>
+                                    <option value="">Select stable coin</option>
                                     <option value="TUSDT">TUSDT</option>
                                     <option value="USDT" disabled>USDT</option>
                                     <option value="DAI" disabled>DAI</option>

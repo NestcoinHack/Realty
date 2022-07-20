@@ -46,8 +46,7 @@ const Content = () => {
             Find Home
           </Text>
           <Text>
-            Our properties are located at prime areas where by there won't be
-            problem with transportation{" "}
+            Check out our featured properties at various locations all listed on the blockcahin{" "}
           </Text>
         </Box>
         <Box
@@ -120,7 +119,7 @@ const Content = () => {
             Why you should choose us
           </Text>
           <Text mb="5">
-            Creating quality urban lifestyles, building stronger communities
+            Creating quality urban lifestyles, building stronger communities on the blockchain
           </Text>
           <Flex
             mt="5"
@@ -163,7 +162,7 @@ const Content = () => {
             most.
           </Text>
           <Box textAlign="right">
-            <Link href="#" _hover={{ textDecoration: "none" }}>
+            <Link href="/properties" _hover={{ textDecoration: "none" }}>
               <Button colorScheme="blue" mt="6">
                 View more
               </Button>
@@ -197,7 +196,7 @@ const Content = () => {
                   <Box>
                     <Text mb="5">Duplex</Text>
                     <Text color="blue.400" fontWeight="bold">
-                      2,000 USDT
+                      2,000 TUSDT
                     </Text>
                   </Box>
                 </Flex>
@@ -228,7 +227,7 @@ const Content = () => {
                   <Box>
                     <Text mb="5">Duplex</Text>
                     <Text color="blue.400" fontWeight="bold">
-                      2,000 USDT
+                      2,000 TUSDT
                     </Text>
                   </Box>
                 </Flex>
@@ -260,7 +259,7 @@ const Content = () => {
                   <Box>
                     <Text mb="5">Duplex</Text>
                     <Text color="blue.400" fontWeight="bold">
-                      2,000 USDT
+                      2,000 TUSDT
                     </Text>
                   </Box>
                 </Flex>
