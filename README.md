@@ -1,4 +1,4 @@
-# REALTY
+# REALTY : [Visit Realty](https://realty-app.netlify.app)
 Realty is a proof of concept solution for crypto-based real estate purchase/payments with stablecoins. It builds on the idea of having another option for asset listing, investment, saving and payments in the real-estate ecosystem aside fiat currency.
 
 ## Contract Flow
@@ -28,3 +28,8 @@ npx hardhat compile
 npx hardhat test
 
 ```
+
+## Deploments
+- Live Site : [Realty](https://realty-app.netlify.app)
+- Contract address : [Realty on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5)
+- Contract : [Realty contract on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5#code)
