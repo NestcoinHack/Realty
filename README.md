@@ -16,7 +16,7 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 ## Using the dApp
 - Connect Metamask
 - Visit [Featured Properties](https://realty-app.netlify.app/properties) from the navbar to see the available assets that have been listed.
-- Click [`List Property on the navbar`](https://realty-app.netlify.app/list-property) to list asset.
+- Click [`List Property`](https://realty-app.netlify.app/list-property) on the navbar to list asset.
 - DM [us](https://twitter.com/adedotxn) with your address for test usdt needed to test listing on the dapp.
 - Approve realty to list your asset for your price
 - Fill the listing form and List your asset
@@ -24,8 +24,10 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 - Check [`Featured Properties`](https://realty-app.netlify.app/properties) to view your publicly listed asset.
 
 ## Tools Used
+- Solidity 
 - Hardhat
-- Openzeppelin contracts 
+- Openzeppelin contracts — ERC721.sol, ERC721URIStorage.sol, IERC20.sol
+- JavaScript 
 - React js.
 - Ethers.js
 - Polygon (mumbai) chain
