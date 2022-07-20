@@ -1,10 +1,5 @@
 import { Box, Text, Image, Flex, Input, Button, Grid, Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton, useDisclosure } from '@chakra-ui/react'
+  ModalOverlay, } from '@chakra-ui/react'
 import React, {useEffect, useState} from 'react'
 import {ethers} from 'ethers'
 import contractAddress from "../contracts/vault_address.json"
@@ -39,6 +34,7 @@ const Save = () => {
         );
           let vaultTxn = await vaultContract.allOwnerSavings()
           setVaultSavings(vaultTxn)
+          console.log('vault txn', vaultTxn)
       } else {
         console.log("ethereum object does not exist!");
       }
@@ -70,11 +66,11 @@ allSavings()
           </Text>
           {vaultSavings.length === 0 ?<Text></Text>:
           <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(2,1fr)', lg:'repeat(3, 1fr)'}} gap={6}>
-           { vaultSavings.map((item, key) => (
+           { vaultSavings.map((item, index) => (
             <VaultCard 
             price={conv(item.propertyPrice)}
             amountSaved = {conv(item.amountSaved)}
-            id = {conv(item.tokenId)}
+            id = {index}
             propertyImage = {propertyImage}
             propertyName={propertyName}
             description = {description}
