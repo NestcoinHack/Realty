@@ -94,11 +94,27 @@ const ListProperty = () => {
             console.log("ethereum object does not exist!");
             setLoading(false)
             onCloseModal()
+            toast({
+              title:"Oppps!",
+              description:"You need to connect your metamask wallet",
+              status:"info",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
           }
         } catch (error) {
           console.log(error);
           setLoading(false)
           onCloseModal()
+          toast({
+              title:"Oppps!",
+              description:error.data.message,
+              status:"error",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
         }
     };
 
@@ -135,12 +151,28 @@ const ListProperty = () => {
             setIsMintLoading(false)
             onMintClose()
             setImageUrl("")
+            toast({
+              title:"Oppps!",
+              description:"You need to connect your metamask wallet",
+              status:"info",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
           }
         } catch (error) {
           console.log(error);
           setIsMintLoading(false)
             onMintClose()
             setImageUrl("")
+            toast({
+              title:"Oppps!",
+              description:error.data.message,
+              status:"error",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
         }
     }
 
@@ -218,14 +250,28 @@ const ListProperty = () => {
                             console.log("ethereum object does not exist!");
                             resetForm()
                             setImageUrl("")
+                            toast({
+                              title:"Oppps!",
+                              description:"You need to connect your metamask wallet",
+                              status:"info",
+                              duration:3000,
+                              variant:"subtle",
+                              isClosable:true,
+                            })
                           }
                         } catch (error) {
                           console.log(error);
                           resetForm()
                           setImageUrl("")
+                          toast({
+                              title:"Oppps!",
+                              description:error.data.message,
+                              status:"error",
+                              duration:3000,
+                              variant:"subtle",
+                              isClosable:true,
+                            })
                         }
-                        
-                
                     }}
                 >
                     {({ errors, isSubmitting, setFieldValue }) => (
