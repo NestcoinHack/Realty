@@ -23,7 +23,7 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 - Connect Metamask
 - Visit [Featured Properties](https://realty-app.netlify.app/properties) from the navbar to see the available assets that have been listed.
 - Click [`List Property`](https://realty-app.netlify.app/list-property) on the navbar to list asset.
-- DM [us](https://twitter.com/adedotxn) with your address for test usdt needed to test listing on the dapp.
+- DM [us](https://twitter.com/adedotxn) with your address for [TUSDT](https://mumbai.polygonscan.com/address/0x4A80319043e4f56562212C10Ad86cDe28083cB10) needed to test listing on the dapp.
 - Approve realty to list your asset for your price
 - Fill the listing form and List your asset
 - Mint an NFT for the asset right after you've submitted the asset for listing.
