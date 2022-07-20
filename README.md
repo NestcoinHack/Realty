@@ -13,13 +13,12 @@ Try run locally :
   git clone https://github.com/NestcoinHack/Realty.git
 ```
 ```shell
-  run npm install
-      or
-  yarn install
-```
-```shell  
   npm run start
-      or
+  run npm install
+```
+or
+```shell  
+  yarn install
   yarn run start
 ```
 To test contract
