@@ -1,6 +1,12 @@
 # REALTY - [Visit Realty](https://realty-app.netlify.app)
 Realty is a proof of concept solution for crypto-based real estate purchase/payments with stablecoins. It builds on the idea of having another option for asset listing, investment, saving and payments in the real-estate ecosystem aside fiat currency.
 
+## Project track 
+ - Creator Track 
+    - Stablecoins can be used for asset payments and listing, current support is only our test coin — [TUSDT](https://mumbai.polygonscan.com/address/0x4A80319043e4f56562212C10Ad86cDe28083cB10) which you can request for from any team member. Further development of the project for mainstream usage will involve mainnet stablecoins like USDT, DAI etc.
+
+    - NFTs are used for verifying listed assets authenticity on Realty and also as proof of ownership of an asset within Realty.
+
 ## Contract Flow
 - listProperty : to submit an asset for listing 
 - approval : this should be done right before listProperty to give allowance to the Realty contract to transfer 0.5 of the stablecoin to Realty as a listing fee.
@@ -17,8 +23,22 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 - Mint an NFT for the asset right after you've submitted the asset for listing.
 - Check [`Featured Properties`](https://realty-app.netlify.app/properties) to view your publicly listed asset.
 
+## Tools Used
+- Hardhat
+- Openzeppelin contracts 
+- React js.
+- Ethers.js
+- Polygon (mumbai) chain
+- Chakra UI
 
-Try run locally :
+## Deployments
+- Live Site : [Realty](https://realty-app.netlify.app)
+- Contract address : [Realty on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5)
+- Verified Contract : [Realty contract on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5#codePS)
+
+
+
+To run locally :
 ```shell
   git clone https://github.com/NestcoinHack/Realty.git
 ```
@@ -38,9 +58,4 @@ npx hardhat compile
 npx hardhat test
 
 ```
-
-## Deployments
-- Live Site : [Realty](https://realty-app.netlify.app)
-- Contract address : [Realty on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5)
-- Verified Contract : [Realty contract on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5#codePS)
 
