@@ -1,5 +1,5 @@
 # REALTY
-Realty is a proof of concept solution for crypto-based real estate purchase/payments with stablecoins. It builds on the idea of having another option for asset listing, investment, saving and payments in the real-estate ecosystem.
+Realty is a proof of concept solution for crypto-based real estate purchase/payments with stablecoins. It builds on the idea of having another option for asset listing, investment, saving and payments in the real-estate ecosystem aside fiat currency.
 
 ## Contract Flow
 - listProperty : to submit an asset for listing 
@@ -13,13 +13,13 @@ Try run locally :
   git clone https://github.com/NestcoinHack/Realty.git
 ```
 ```shell
-  npm run start
-  run npm install
+  npm install
+  npm start
 ```
 or
 ```shell  
   yarn install
-  yarn run start
+  yarn start
 ```
 To test contract
 ```shell
