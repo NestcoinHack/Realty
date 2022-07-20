@@ -174,7 +174,7 @@ const PropertyCard = ({src, location,propertyName,description, price, id, addres
 
 
   return (
-    <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' id={id} mb={3}>
+    <Box w={{base:"100%", md:"40%", lg:"30%"}} borderWidth='1px' borderRadius='lg' overflow='hidden' id={id} mb={3}>
       <Image src={src} alt="property-img" h="200px" w="100%" objectFit="cover"/>
       <Box p='6'>
 
@@ -227,9 +227,9 @@ const PropertyCard = ({src, location,propertyName,description, price, id, addres
         	<AlertIcon/>
         	Property has been bought
         </Alert> : null}
-        {address.toLowerCase() !== currentAccount && buyer.toLowerCase() !== currentAccount && buyer === "0x000000000000000000000000000000000000dEaD"  ? <Flex justify="space-between">	
-        	<Button variant="outline" size="sm" colorScheme="blue" onClick={onOpenModal} isLoading={purchase}>Purchase</Button>
-          <Button variant="outline" onClick={handleSave} size="sm" colorScheme="green" >Save to buy</Button>	
+        {address.toLowerCase() !== currentAccount && buyer.toLowerCase() !== currentAccount && buyer === "0x000000000000000000000000000000000000dEaD"  ? <Flex direction={{base:"row", md:"column"}} justifyContent={{base:"space-between", md:"center"}}>	
+        	<Button variant="outline" colorScheme="blue" size={{base:"sm", md:"md"}} w={{base:"auto", md:"100%"}} onClick={onOpenModal} isLoading={purchase} mb={2}>Purchase</Button>
+          <Button variant="outline" onClick={handleSave} size={{base:"sm", md:"md"}} w={{base:"auto", md:"100%"}} colorScheme="green" mb={2}>Save to buy</Button>	
 
         </Flex>: null}
       </Box>
