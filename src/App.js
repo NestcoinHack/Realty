@@ -10,6 +10,7 @@ import Admin from "./components/Admin"
 import Properties from "./components/Properties"
 import Save from "./components/Save";
 import AdminOverview from "./components/AdminOverview"
+import UserOverview from "./components/UserOverview"
 
 function App() {
   const toast = useToast()
@@ -131,7 +132,8 @@ function App() {
           <Route path="/admin/send-token" element={<Admin />} />
           <Route path="/properties" element={<Properties currentAccount={currentAccount}/>} />
           <Route path="/save-to-buy" element={<Save/>} />
-          <Route path="/admin" element={<AdminOverview/>}/>
+          <Route path="/admin" element={<AdminOverview currentAccount={currentAccount}/>}/>
+          <Route path="/user" element={<UserOverview currentAccount={currentAccount}/>}/>
         </Routes>
         <Footer />
       </BrowserRouter>
