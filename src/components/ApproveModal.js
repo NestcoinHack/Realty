@@ -20,7 +20,7 @@ export default function ApproveModal({isOpen, approve, onClose, loading}) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-          <Flex>Want to become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-5px"/> agent ? </Flex>
+          <Flex>Approve <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-5px"/> contract ? </Flex>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>

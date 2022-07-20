@@ -1,18 +1,144 @@
-import React from 'react';
-import { Box, Badge, Image, Text, Flex, Button} from "@chakra-ui/react";
+import React, { useState } from 'react';
+import { Box, Badge, Image, Text, Flex, Button, useDisclosure, useToast, Alert, AlertIcon } from "@chakra-ui/react";
+import contractAddress from "../contracts/contract_address.json"
+import tokenAddress from "../contracts/token_address.json"
+import abi from "../contracts/abi.json";
+import tokenAbi from "../contracts/token_abi.json"
+import {ethers} from 'ethers'
+import ApproveModal from "./ApproveModal"
 
-const PropertyCard = ({src, location,propertyName,description, price})=> {
+const PropertyCard = ({src, location,propertyName,description, price, id, address, currentAccount, buyer})=> {
+
+	const [loading, setLoading] = useState(false)
+	const [purchase, setPurchase] = useState(false)
+	const toast = useToast()
+
+	const conv = (x) => {
+		let y = x._hex
+		return parseInt(y.toString(), 16) 
+	}
+
+	 const {
+        isOpen: isOpenModal,
+        onOpen: onOpenModal,
+        onClose: onCloseModal,
+      } = useDisclosure();
+
+      const approve = async () => {
+        setLoading(true)
+        let amount = conv(price)
+        amount = ethers.utils.parseEther(amount.toString())
+       
+        try {
+          const { ethereum } = window;
+          if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const TokenContract = new ethers.Contract(
+              tokenAddress.contractAddress,
+              tokenAbi.abi,
+              signer
+            );
+            let approval = await TokenContract.approve(contractAddress.contractAddress, amount );
+                
+            await approval.wait();
+            toast({
+              title:"Great!",
+              description:"You can now purchase this property",
+              status:"success",
+              duration:1500,
+              variant:"subtle",
+              isClosable:true,
+            })
+            setLoading(false)
+            onCloseModal()
+            purchaseProperty()
+          } else {
+            console.log("ethereum object does not exist!");
+            setLoading(false)
+            onCloseModal()
+            toast({
+              title:"Oppps!",
+              description:"You need to connect your metamask wallet",
+              status:"info",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
+          }
+        } catch (error) {
+          console.log(error);
+          setLoading(false)
+          onCloseModal()
+          toast({
+              title:"Oppps!",
+              description:error.data.message,
+              status:"error",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
+        }
+    };
+
+	 const purchaseProperty= async() => {
+	 	setPurchase(true)
+        try {
+          const { ethereum } = window;
+          if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const PropertyNftContract = new ethers.Contract(
+              contractAddress.contractAddress,
+              abi.abi,
+              signer
+            );
+            let payment = await PropertyNftContract.payForProperty(id, 'TUSDT')
+             await payment.wait();   
+           	toast({
+              title:"Great!",
+              description:"You have bought this property",
+              status:"success",
+              duration:1500,
+              variant:"subtle",
+              isClosable:true,
+            })
+           	setPurchase(false)
+          } else {
+            console.log("ethereum object does not exist!");
+            setPurchase(false)
+            toast({
+	          title:"Oppps!",
+	          description:"You need to connect your metamask wallet",
+	          status:"info",
+	          duration:3000,
+	          variant:"subtle",
+	          isClosable:true,
+	        })
+          }
+        } catch (error) {
+          console.log(error);
+          setPurchase(false)
+          toast({
+              title:"Oppps!",
+              description:error.data.message,
+              status:"error",
+              duration:3000,
+              variant:"subtle",
+              isClosable:true,
+            })
+        }
+    }
 
   return (
-    <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
+    <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' id={id} mb={3}>
       <Image src={src} alt="property-img" h="200px" w="100%" objectFit="cover"/>
-
       <Box p='6'>
 
         <Box display='flex' alignItems='baseline' mb={3}>
           <Badge borderRadius='full' px='2' colorScheme='teal' >
             New
-          </Badge>
+          </Badge> 
           <Box
             color='gray.500'
             fontWeight='semibold'
@@ -38,7 +164,7 @@ const PropertyCard = ({src, location,propertyName,description, price})=> {
         </Box>
 
         <Box mb={2}>
-          {price} TUSDT
+          {conv(price)} TUSDT
         </Box>
 
         <Box mb={2}>
@@ -46,11 +172,24 @@ const PropertyCard = ({src, location,propertyName,description, price})=> {
         		{description}
         	</Text>
         </Box>
-        <Flex justify="space-between">	
-        	<Button variant="outline" size="sm" colorScheme="blue.400">Purchase</Button>
+        {address.toLowerCase() === currentAccount ? <Alert status="info" fontSize="12px" mb={2}>
+        	<AlertIcon/>
+        	Property listed by you
+        </Alert> : null}
+        {buyer.toLowerCase() === currentAccount ? <Alert status="success" fontSize="12px" mb={2}>
+        	<AlertIcon/>
+        	Property purchased by you
+        </Alert> : null}
+        {buyer !== "0x000000000000000000000000000000000000dEaD" && buyer.toLowerCase() !== currentAccount  ? <Alert status="success" fontSize="12px" mb={2}>
+        	<AlertIcon/>
+        	Property has been bought
+        </Alert> : null}
+        {address.toLowerCase() !== currentAccount && buyer.toLowerCase() !== currentAccount && buyer === "0x000000000000000000000000000000000000dEaD"  ? <Flex justify="space-between">	
+        	<Button variant="outline" size="sm" colorScheme="blue" onClick={onOpenModal} isLoading={purchase}>Purchase</Button>
         	<Button variant="outline" size="sm" colorScheme="green">Save to buy</Button>	
-        </Flex>	
+        </Flex>: null}
       </Box>
+   	<ApproveModal isOpen={isOpenModal} onClose={onCloseModal} approve={approve} loading={loading}/>
     </Box>
   )
 }

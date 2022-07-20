@@ -6,7 +6,7 @@ import {ethers} from 'ethers'
 import PropertyCard from "./PropertyCard"
 import SkeletonCard from "./Skeleton"
 
-const Properties = () => {
+const Properties = ({currentAccount}) => {
 	const [ properties, setProperties] = useState([])
 	const [ loading, setLoading] = useState(false)
 
@@ -21,12 +21,13 @@ const Properties = () => {
 			newArr.push({
 				name: arr[0][i],
 				address: arr[1][i],
-				amount: conv(arr[2][i]),
-				id: conv(arr[3][i]),
+				amount: arr[2][i],
+				id: arr[3][i],
 				location: arr[4][i],
 				description:arr[5][i],
 				buyer:arr[6][i],
-				url: arr[7][i]
+				url: arr[7][i],
+
 			})
 		}
 		return newArr;
@@ -69,12 +70,16 @@ const Properties = () => {
        	<Flex w="90%" mx="auto" justify="space-around" py={10} direction={{base:"column", md:"row"}}>
        		{properties && properties.map( property => (
        			<PropertyCard
-       				key={property.id}
+       				id={property.id}
+       				key={conv(property.id)}
        				src={property.url}
        				location={property.location}
        				propertyName={property.name}
        				description={property.description}
        				price={property.amount}
+       				address ={property.address}
+       				currentAccount={currentAccount}
+       				buyer={property.buyer}
        			/>
        		))}
        	</Flex>
