@@ -11,16 +11,15 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 Try run locally :
 ```shell
   git clone https://github.com/NestcoinHack/Realty.git
+```
+```shell
   run npm install
-  
-  or
-  
+      or
   yarn install
-  
+```
+```shell  
   npm run start
-  
-  or
-  
+      or
   yarn run start
 ```
 To test contract
