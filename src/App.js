@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import SetPaymentToken from "./components/SetPaymentToken";
 import Admin from "./components/Admin"
 import Properties from "./components/Properties"
+import Save from "./components/Save";
 
 function App() {
   const toast = useToast()
@@ -128,6 +129,8 @@ function App() {
           <Route path="list-property" element={<ListProperty />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/properties" element={<Properties currentAccount={currentAccount}/>} />
+          <Route path="/save-to-buy" element={<Save/>} />
+
         </Routes>
         <Footer />
       </BrowserRouter>

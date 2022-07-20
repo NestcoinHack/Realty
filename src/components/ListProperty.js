@@ -137,7 +137,7 @@ const ListProperty = () => {
             await nft.wait();
             toast({
               title:"Great!",
-              description:"You property is now an NFT",
+              description:"Your property is now an NFT",
               status:"success",
               duration:1500,
               variant:"subtle",

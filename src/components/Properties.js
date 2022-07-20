@@ -67,7 +67,7 @@ const Properties = ({currentAccount}) => {
        		<SkeletonCard/>
        		<SkeletonCard/>
        	</Flex> :
-       	<Flex w="90%" mx="auto" justify="space-around" py={10} direction={{base:"column", md:"row"}}>
+       	<Flex flexWrap='wrap' w="90%" mx="auto" justify="space-around" py={10} direction={{base:"column", md:"row"}}>
        		{properties && properties.map( property => (
        			<PropertyCard
        				id={property.id}

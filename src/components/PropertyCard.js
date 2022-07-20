@@ -1,13 +1,55 @@
 import React, { useState } from 'react';
-import { Box, Badge, Image, Text, Flex, Button, useDisclosure, useToast, Alert, AlertIcon } from "@chakra-ui/react";
+import { Box, Badge, Image, Text, Flex, Button, useDisclosure, useToast, Alert, AlertIcon, Link } from "@chakra-ui/react";
 import contractAddress from "../contracts/contract_address.json"
 import tokenAddress from "../contracts/token_address.json"
 import abi from "../contracts/abi.json";
 import tokenAbi from "../contracts/token_abi.json"
 import {ethers} from 'ethers'
 import ApproveModal from "./ApproveModal"
+import { useNavigate } from "react-router-dom";
+import vaultContractAddress from "../contracts/vault_address.json"
+import vaultAbi from "../contracts/vault_abi.json";
+
 
 const PropertyCard = ({src, location,propertyName,description, price, id, address, currentAccount, buyer})=> {
+
+  let navigate = useNavigate();
+
+  const handleSave= async() => {
+    // window.localStorage.setItem('image', src)
+    // window.localStorage.setItem('property name', propertyName)
+    // window.localStorage.setItem('id', id)
+    // window.localStorage.setItem('price', price)
+    // window.localStorage.setItem('description', description)
+    // navigate('/save-to-buy')
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const vaultContract = new ethers.Contract(
+          vaultContractAddress.contractAddress,
+          vaultAbi.abi,
+          signer
+        );
+
+          let vaultTxn = await vaultContract.addProperty(id, price, tokenAddress.contractAddress)
+          await vaultTxn.wait();
+        console.log(vaultTxn)
+    window.localStorage.setItem('description', description)
+    window.localStorage.setItem('image', src)
+    window.localStorage.setItem('property name', propertyName)
+
+    navigate('/save-to-buy')
+        
+      } else {
+        console.log("ethereum object does not exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
 	const [loading, setLoading] = useState(false)
 	const [purchase, setPurchase] = useState(false)
@@ -80,7 +122,6 @@ const PropertyCard = ({src, location,propertyName,description, price, id, addres
             })
         }
     };
-
 	 const purchaseProperty= async() => {
 	 	setPurchase(true)
         try {
@@ -129,6 +170,8 @@ const PropertyCard = ({src, location,propertyName,description, price, id, addres
             })
         }
     }
+
+
 
   return (
     <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' id={id} mb={3}>
@@ -186,7 +229,8 @@ const PropertyCard = ({src, location,propertyName,description, price, id, addres
         </Alert> : null}
         {address.toLowerCase() !== currentAccount && buyer.toLowerCase() !== currentAccount && buyer === "0x000000000000000000000000000000000000dEaD"  ? <Flex justify="space-between">	
         	<Button variant="outline" size="sm" colorScheme="blue" onClick={onOpenModal} isLoading={purchase}>Purchase</Button>
-        	<Button variant="outline" size="sm" colorScheme="green">Save to buy</Button>	
+          <Button variant="outline" onClick={handleSave} size="sm" colorScheme="green" >Save to buy</Button>	
+
         </Flex>: null}
       </Box>
    	<ApproveModal isOpen={isOpenModal} onClose={onCloseModal} approve={approve} loading={loading}/>
