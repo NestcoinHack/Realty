@@ -91,7 +91,7 @@ contract SavingVault {
                 address(this),
                 _amount
             ),
-            "Transfer disabbled"
+          "Transfer disabbled"
         );
         Transaction memory newTransaction = Transaction(
             msg.sender,
