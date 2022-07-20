@@ -78,7 +78,6 @@ export default function Navbar() {
       console.log(error);
     }
   };
-
   //connect wallet with button click
   const connectWallet = async () => {
       try {
