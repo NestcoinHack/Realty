@@ -15,6 +15,9 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 - approval : this should be done right before listProperty to give allowance to the Realty contract to transfer 0.5 of the stablecoin to Realty as a listing fee.
 - minfNFT : to mint an NFT for the submitted property and thereby publiclly listing the asset for viewing and purchase by everyone.
 - payForProperty : to pay for a particular property and have it's NFT transferred to you.
+- addPropertyToSavingVault : Unable to pay upfront, add listed property to savings vault for instalmental savings.
+- Deposit: sends a given amount of token to the contract. Tokens gets accumulated in order to amount to product price.
+- Withdrawal: occurs once total savings equals product price. User withdrawals property price into wallet address for property purchase.
 
 ## Using the dApp
 - Connect Metamask
@@ -25,6 +28,9 @@ Realty is a proof of concept solution for crypto-based real estate purchase/paym
 - Fill the listing form and List your asset
 - Mint an NFT for the asset right after you've submitted the asset for listing.
 - Check [`Featured Properties`](https://realty-app.netlify.app/properties) to view your publicly listed asset.
+- Click deposit, to deposit token amount into user's savings account.
+- Start Savings, creates a saving account for a user. Permits property saving listing.
+
 
 ## Tools Used
 - Solidity 
