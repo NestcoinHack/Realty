@@ -1,9 +1,7 @@
-import { Box, Text, Image, Flex, Input, Button, Grid, Modal,
-  ModalOverlay, } from '@chakra-ui/react'
+import { Box, Text,  Grid } from '@chakra-ui/react'
 import React, {useEffect, useState} from 'react'
 import {ethers} from 'ethers'
 import contractAddress from "../contracts/vault_address.json"
-
 import abi from "../contracts/vault_abi.json";
 import VaultCard from './VaultCard';
 
