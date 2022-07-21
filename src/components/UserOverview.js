@@ -2,9 +2,9 @@ import React,{ useState, useEffect } from 'react';
 import { useNavigate }  from "react-router"
 import {  MdHomeWork } from 'react-icons/md';
 import { SiHomebridge } from 'react-icons/si';
-import { Flex, Box, Heading} from "@chakra-ui/react"
+import { Flex, Box, Heading, Link} from "@chakra-ui/react"
 import { RiHomeHeartFill } from 'react-icons/ri';
-import { FcHome } from 'react-icons/fc';
+import { FcHome, FcKey } from 'react-icons/fc';
 import tokenAddress from "../contracts/token_address.json"
 import tokenAbi from "../contracts/token_abi.json"
 import {ethers} from 'ethers'
@@ -115,6 +115,25 @@ const   UserOverview = ({currentAccount}) => {
                 <FcHome style={{fontSize:"70px", color:"green", margin:"auto"}}/>
                 <Box mt="5" justifyContent="space-between" fontSize="20px">
                   See all listings on Realty
+                </Box>
+             </Box>
+
+
+<Box
+                mb="10"
+                w={{ base: "100%", md: "40%" }}
+                bgColor="white"
+                p="10"
+                mr={{base:"0",md:"8"}}
+                borderTopRightRadius="10%"
+                borderBottomLeftRadius="10%"
+                onClick={()=> navigate("/save-to-buy")}
+                textAlign="center"
+                border="1px solid green"
+              >
+                <FcKey style={{fontSize:"70px", color:"green", margin:"auto"}}/>
+                <Box mt="5" justifyContent="space-between" fontSize="20px">
+                 View savings vault
                 </Box>
              </Box>
              

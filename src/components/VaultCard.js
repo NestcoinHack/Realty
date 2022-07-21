@@ -15,7 +15,7 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import contractAddress from "../contracts/vault_address.json";
 
@@ -135,10 +135,33 @@ const VaultCard = ({
       console.log(error);
     }
 };
+
+useEffect(() => {
+  let vaultContract;
+
+  const onNewTransaction = (amount) => {
+    setDepositAmount(amount)
+  };
+
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    vaultContract = new ethers.Contract(contractAddress.contractAddress, abi.abi, signer);
+    vaultContract.on("deposit", onNewTransaction);
+  }
+
+  return () => {
+    if (vaultContract) {
+      vaultContract.off("deposit", onNewTransaction);
+    }
+  };
+}, []);
+
   return (
     <Box>
-      <Box key={id}>
+      <Box key={id} border='1px solid #eee' mb='10' borderRadius='lg'>
         <Image src={propertyImage} />
+        <Box mx='5' >
         <Text
           mt="1"
           fontWeight="semibold"
@@ -146,7 +169,7 @@ const VaultCard = ({
           lineHeight="tight"
           noOfLines={1}
           color="blue.400"
-          my={2}
+          my={5}
         >
           {propertyName}
         </Text>
@@ -158,13 +181,12 @@ const VaultCard = ({
           </Text>{" "}
           out of {price} TUSDT
         </Text>
-        <Text> {description}</Text>
-        {/* <Button colorScheme='blue' onClick={withdraw}>withdraw</Button> */}
-        {price === amountSaved ? withdrawCompleted === '' ? isWithdrawing === false ?<Button colorScheme='blue' onClick={withdraw}>withdraw</Button> : <Button colorScheme='blue' isLoading
-    loadingText='Withdrawing' onClick={withdraw}>withdraw</Button> :<Text color='green'>{withdrawCompleted}</Text>   : isDeposit === false ?  <Button onClick={onOpen} mb="20" colorScheme="blue">
+        <Text my='5'> {description}</Text>
+        {price === amountSaved ? withdrawCompleted === '' ? isWithdrawing === false ?<Button colorScheme='blue' mb='4' onClick={withdraw}>withdraw</Button> : <Button mb='4' colorScheme='blue' isLoading
+    loadingText='Withdrawing' onClick={withdraw}>withdraw</Button> :<Text mb='4' color='green'>{withdrawCompleted}</Text>   : isDeposit === false ?  <Button mb='4' onClick={onOpen}  colorScheme="blue">
           Deposit
-        </Button> : <Button onClick={onOpen} isLoading
-    loadingText='Depositing' mb="20" colorScheme="blue">
+        </Button> : <Button mb='4' onClick={onOpen} isLoading
+    loadingText='Depositing'  colorScheme="blue">
           Deposit
         </Button>}
         
@@ -203,6 +225,8 @@ const VaultCard = ({
             </form>
           </ModalContent>
         </Modal>
+        </Box>
+       
       </Box>
     </Box>
   );
