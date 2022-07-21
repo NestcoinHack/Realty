@@ -2,7 +2,7 @@ import React,{ useState, useEffect } from 'react';
 import { useNavigate }  from "react-router"
 import {  MdHomeWork } from 'react-icons/md';
 import { SiHomebridge } from 'react-icons/si';
-import { Flex, Box, Heading} from "@chakra-ui/react"
+import { Flex, Box, Heading, Text} from "@chakra-ui/react"
 import { RiHomeHeartFill } from 'react-icons/ri';
 import { FcHome } from 'react-icons/fc';
 import tokenAddress from "../contracts/token_address.json"
@@ -58,10 +58,12 @@ const   UserOverview = ({currentAccount}) => {
                 borderBottomLeftRadius="10%"
                 onClick={()=> navigate("/list-property")}
                 textAlign="center"
+                cursor="pointer"
               >
                 <MdHomeWork style={{fontSize:"70px", color:"green", margin:"auto"}}/>
-                <Box mt="5" justifyContent="space-between" fontSize="20px">
+                <Box mt="5"  fontSize="20px">
                   List Property
+                  <Text fontSize="14px" mt={3}>Go ahead to list your property and mint for it to be publically visible</Text>
                 </Box>
              </Box>
 
@@ -76,10 +78,12 @@ const   UserOverview = ({currentAccount}) => {
                 onClick={()=> navigate("/properties/on-sale")}
                 textAlign="center"
                 border="1px solid green"
+                cursor="pointer"
               >
                 <RiHomeHeartFill style={{fontSize:"70px", color:"green", margin:"auto"}}/>
-                <Box mt="5" justifyContent="space-between" fontSize="20px">
+                <Box mt="5"  fontSize="20px">
                   See featured properties on sale
+                  <Text fontSize="14px" mt={3}>View all listings that are currently on sale on Realty</Text>
                 </Box>
              </Box>
 
@@ -93,10 +97,12 @@ const   UserOverview = ({currentAccount}) => {
                 borderBottomLeftRadius="10%"
                 onClick={()=> navigate("/properties/my-listings")}
                 textAlign="center"
+                cursor="pointer"
               >
                 <SiHomebridge style={{fontSize:"70px", color:"green", margin:"auto"}}/>
-                <Box mt="5" justifyContent="space-between" fontSize="20px">
+                <Box mt="5" fontSize="20px">
                   See my listings
+                  <Text fontSize="14px" mt={3}>View your property listings that are not yet sold</Text>  
                 </Box>
              </Box>
 
@@ -111,9 +117,10 @@ const   UserOverview = ({currentAccount}) => {
                 onClick={()=> navigate("/properties")}
                 textAlign="center"
                 border="1px solid green"
+                cursor="pointer"
               >
                 <FcHome style={{fontSize:"70px", color:"green", margin:"auto"}}/>
-                <Box mt="5" justifyContent="space-between" fontSize="20px">
+                <Box mt="5" fontSize="20px">
                   See all listings on Realty
                 </Box>
              </Box>
