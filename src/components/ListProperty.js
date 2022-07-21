@@ -16,9 +16,10 @@ import { ImageUpload } from "react-ipfs-uploader"
 import ApproveModal from "./ApproveModal"
 import MintModal from "./MintModal"
 import Logo from "../assets/svg/1.svg";
-
+import { useNavigate } from "react-router-dom";
 
 const ListProperty = () => {
+  const navigate = useNavigate()
 
     //validation schema for input fields
     const validationSchema = yup.object().shape({
@@ -146,6 +147,7 @@ const ListProperty = () => {
             setIsMintLoading(false)
             onMintClose()
             setImageUrl("")
+            navigate("/properties")
           } else {
             console.log("ethereum object does not exist!");
             setIsMintLoading(false)

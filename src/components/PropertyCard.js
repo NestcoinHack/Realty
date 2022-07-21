@@ -10,7 +10,6 @@ import {
   useToast,
   Alert,
   AlertIcon,
-  Link,
 } from "@chakra-ui/react";
 import contractAddress from "../contracts/contract_address.json";
 import tokenAddress from "../contracts/token_address.json";
@@ -32,6 +31,8 @@ const PropertyCard = ({
   address,
   currentAccount,
   buyer,
+  reload, 
+  setReload
 }) => {
   let navigate = useNavigate();
 
@@ -169,6 +170,7 @@ const PropertyCard = ({
           variant: "subtle",
           isClosable: true,
         });
+        setReload(!reload)
         setPurchase(false);
       } else {
         console.log("ethereum object does not exist!");
@@ -272,6 +274,7 @@ const PropertyCard = ({
             direction={{ base: "row", md: "column" }}
             justifyContent={{ base: "space-between", md: "center" }}
           >
+            {console.log("here")}
             <Button
               variant="outline"
               colorScheme="blue"

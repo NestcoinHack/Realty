@@ -20,6 +20,7 @@ function App() {
   const [currentAccount, setCurrentAccount] = useState("");
   const [ properties, setProperties] = useState([])
 	const [ loading, setLoading] = useState(false)
+  const [ reload, setReload] = useState(false)
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -170,15 +171,13 @@ function App() {
       return e.buyer === "0x000000000000000000000000000000000000dEaD" && (e.address.toLowerCase()) === currentAccount
     })
 
-    useEffect(()=> {
-      if(currentAccount){
-    	  fetchProperties()
-      }
-    },[currentAccount])
-
   useEffect(() => {
     checkIfWalletIsConnected();
-  }, []);
+    if(currentAccount){
+      fetchProperties()
+    }
+  }, [currentAccount, reload]);
+
 
   return (
     <Box
@@ -193,8 +192,8 @@ function App() {
           <Route path="/admin/set-payment-token" element={<SetPaymentToken />} />
           <Route path="list-property" element={<ListProperty />} />
           <Route path="/admin/send-token" element={<Admin />} />
-          <Route path="/properties" element={<Properties currentAccount={currentAccount} properties={properties} loading={loading}/>} />
-          <Route path="/properties/on-sale" element={<Properties currentAccount={currentAccount} properties={unsoldProperties} loading={loading}/>} />
+          <Route path="/properties" element={<Properties currentAccount={currentAccount} properties={properties} loading={loading} reload={reload} setReload={setReload}/>} />
+          <Route path="/properties/on-sale" element={<Properties currentAccount={currentAccount} properties={unsoldProperties} loading={loading} reload={reload} setReload={setReload}/>} />
           <Route path="/properties/my-listings" element={<Properties currentAccount={currentAccount} properties={myListings} loading={loading}/>} />
           <Route path="/save-to-buy" element={<Save/>} />
           <Route path="/admin" element={<AdminOverview currentAccount={currentAccount}/>}/>

@@ -1,10 +1,10 @@
-import React,{ useState, useEffect } from 'react';
+import React from 'react';
 import { Box, Flex, Link, Text } from "@chakra-ui/react";
 import PropertyCard from "./PropertyCard"
 import SkeletonCard from "./Skeleton"
 import { TbHomeOff } from "react-icons/tb"
 
-const Properties = ({currentAccount, properties, loading}) => {
+const Properties = ({currentAccount, properties, loading, reload, setReload}) => {
 	const conv = (x) => {
 		let y = x._hex
 		return parseInt(y.toString(), 16) 
@@ -36,6 +36,8 @@ const Properties = ({currentAccount, properties, loading}) => {
        				address ={property.address}
        				currentAccount={currentAccount}
        				buyer={property.buyer}
+					reload={reload}
+					setReload={setReload}
        			/>
        		))}
        	</Flex>

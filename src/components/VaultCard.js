@@ -2,10 +2,8 @@ import {
   Box,
   Text,
   Image,
-  Flex,
   Input,
   Button,
-  Grid,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -14,6 +12,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  useToast
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { ethers } from "ethers";
@@ -32,18 +31,18 @@ const VaultCard = ({
   propertyImage,
   propertyName,
   description,
+  reload,
+  setReload
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [depositAmount, setDepositAmount] = useState(null);
   const [isDeposit, setIsDeposit] = useState(false)
   const [isWithdrawing, setIsWithdrawing] = useState(false)
   const [withdrawCompleted, setWithdrawCompleted] = useState('')
-
+  const toast = useToast()
   let navigate = useNavigate();
 
-  const deposit = async (e) => {
-    e.preventDefault();
-    setIsDeposit(true)
+  const deposit = async (e) => { 
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -54,7 +53,6 @@ const VaultCard = ({
           abi.abi,
           signer
         );
-        approve()
 
         let vaultTxn = await vaultContract.Deposit(
           id,
@@ -63,18 +61,30 @@ const VaultCard = ({
         );
         await vaultTxn.wait();
         console.log("vault txn", vaultTxn);
-        setDepositAmount("");
+        toast({
+          title:"Successful!",
+          description:"Amount successfully added to savings vault",
+          status:"success",
+          duration:3000,
+          variant:"subtle",
+          isClosable:true,
+        })
+        setReload(!reload)
+        setDepositAmount(null);
         onClose()
         setIsDeposit(false)
-
       } else {
         console.log("ethereum object does not exist!");
         setIsDeposit(false)
+        setDepositAmount(null);
+        onClose()
 
       }
     } catch (error) {
       console.log(error);
       setIsDeposit(false)
+      setDepositAmount(null);
+      onClose()
 
     }
   };
@@ -95,6 +105,15 @@ const VaultCard = ({
           signer
         );
         let vaultTxn = await vaultContract.WithdrawSavings( id );
+        toast({
+          title:"Successful!",
+          description:"Amount successfully withdrawn from savings vault",
+          status:"success",
+          duration:3000,
+          variant:"subtle",
+          isClosable:true,
+        })
+        setReload(!reload)
         setIsWithdrawing(false)
         setWithdrawCompleted('Withdrawal successful')
         navigate('/properties')
@@ -112,8 +131,10 @@ const VaultCard = ({
   };
 
 
-  const approve = async () => {
-   
+  const approve = async (e) => {
+    e.preventDefault();
+    setIsDeposit(true)
+    console.log("here")
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -127,16 +148,31 @@ const VaultCard = ({
         let approval = await TokenContract.approve(contractAddress.contractAddress, depositAmount );
             
         await approval.wait();
+        toast({
+          title:"Great!",
+          description:"Process is approved. Please confirm to deposit amount",
+          status:"info",
+          duration:3000,
+          variant:"subtle",
+          isClosable:true,
+        })
+        deposit()
          
       } else {
         console.log("ethereum object does not exist!");
+        onClose()
+        setDepositAmount(null)
+        setIsDeposit(false)
       }
     } catch (error) {
       console.log(error);
+      onClose()
+      setDepositAmount(null)
+      setIsDeposit(false)
     }
 };
   return (
-    <Box>
+    <Box mb={3}>
       <Box key={id}>
         <Image src={propertyImage} />
         <Text
@@ -160,8 +196,15 @@ const VaultCard = ({
         </Text>
         <Text> {description}</Text>
         {/* <Button colorScheme='blue' onClick={withdraw}>withdraw</Button> */}
-        {price === amountSaved ? withdrawCompleted === '' ? isWithdrawing === false ?<Button colorScheme='blue' onClick={withdraw}>withdraw</Button> : <Button colorScheme='blue' isLoading
-    loadingText='Withdrawing' onClick={withdraw}>withdraw</Button> :<Text color='green'>{withdrawCompleted}</Text>   : isDeposit === false ?  <Button onClick={onOpen} mb="20" colorScheme="blue">
+        {price === amountSaved ? 
+        withdrawCompleted === '' ? 
+        isWithdrawing === false ?
+        <Button colorScheme='blue' onClick={withdraw}>withdraw</Button> : 
+        <Button colorScheme='blue' isLoading loadingText='Withdrawing' onClick={withdraw}>withdraw</Button> :
+        <Text color='green'>Withdrawal Completed</Text>   
+        : 
+        isDeposit === false ?  
+        <Button onClick={onOpen} mb="20" colorScheme="blue">
           Deposit
         </Button> : <Button onClick={onOpen} isLoading
     loadingText='Depositing' mb="20" colorScheme="blue">
@@ -174,7 +217,7 @@ const VaultCard = ({
           <ModalContent>
             <ModalHeader>Deposit </ModalHeader>
             <ModalCloseButton />
-            <form onSubmit={deposit}>
+            <form onSubmit={approve}>
               <ModalBody pb={6}>
                 <Input
                   type="number"
@@ -190,7 +233,7 @@ const VaultCard = ({
               <ModalFooter>
                 {isDeposit === false ?
                  <Button type="submit" colorScheme="blue" mr={3}>
-                 Submit
+                 Approve and deposit
                </Button>:
                 <Button type="submit" isLoading
                 loadingText='Submitting'  colorScheme="blue" mr={3}>

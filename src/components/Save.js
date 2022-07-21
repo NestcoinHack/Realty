@@ -17,6 +17,7 @@ const Save = () => {
 
   const [depositAmount, setDepositAmount] = useState(null)
   const [vaultSavings, setVaultSavings] = useState([])
+  const [reload, setReload] = useState(false)
   const [tokenAdd, setTokenAdd] = useState('')
   const [tokenId, setTokenId]= useState(null)
 
@@ -49,7 +50,7 @@ const Save = () => {
 
 useEffect(() => {
 allSavings()
-}, [])
+}, [reload])
 
 
     return(
@@ -74,6 +75,8 @@ allSavings()
             propertyImage = {propertyImage}
             propertyName={propertyName}
             description = {description}
+            reload={reload}
+            setReload={setReload}
             
             />
             ))}
