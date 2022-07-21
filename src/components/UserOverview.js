@@ -136,11 +136,12 @@ const   UserOverview = ({currentAccount}) => {
                 borderBottomLeftRadius="10%"
                 onClick={()=> navigate("/save-to-buy")}
                 textAlign="center"
-                border="1px solid green"
+                cursor="pointer"
               >
                 <FcKey style={{fontSize:"70px", color:"green", margin:"auto"}}/>
-                <Box mt="5" justifyContent="space-between" fontSize="20px">
+                <Box mt="5"  fontSize="20px">
                  View savings vault
+                 <Text fontSize="14px" mt={3}>View the properties that you are saving up for</Text> 
                 </Box>
              </Box>
              
