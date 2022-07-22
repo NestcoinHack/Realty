@@ -18,7 +18,7 @@ import MintModal from "./MintModal"
 import Logo from "../assets/svg/1.svg";
 import { useNavigate } from "react-router-dom";
 
-const ListProperty = () => {
+const ListProperty = ({reload, setReload}) => {
   const navigate = useNavigate()
 
     //validation schema for input fields
@@ -147,6 +147,7 @@ const ListProperty = () => {
             setIsMintLoading(false)
             onMintClose()
             setImageUrl("")
+            setReload(!reload)
             navigate("/properties")
           } else {
             console.log("ethereum object does not exist!");

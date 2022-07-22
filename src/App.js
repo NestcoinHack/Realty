@@ -190,7 +190,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin/set-payment-token" element={<SetPaymentToken />} />
-          <Route path="list-property" element={<ListProperty />} />
+          <Route path="list-property" element={<ListProperty reload={reload} setReload={setReload}/>} />
           <Route path="/admin/send-token" element={<Admin />} />
           <Route path="/properties" element={<Properties currentAccount={currentAccount} properties={properties} loading={loading} reload={reload} setReload={setReload}/>} />
           <Route path="/properties/on-sale" element={<Properties currentAccount={currentAccount} properties={unsoldProperties} loading={loading} reload={reload} setReload={setReload}/>} />
