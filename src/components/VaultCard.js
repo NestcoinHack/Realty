@@ -297,6 +297,7 @@ const VaultCard = ({
         <Flex
           direction={{ base: "row", md: "column" }}
           justifyContent={{ base: "space-between", md: "center" }}
+          my={2}
         >
 
           <Button

@@ -28,7 +28,7 @@ function App() {
 
   const urlLoader = (url) => {
     if(url.slice(0,22) === "https://ipfs.infura.io"){
-      return "https://ipfs.io" + url.slice(22);
+      return "https://cloudflare-ipfs.com" + url.slice(22);
     } else{
       return url
     }

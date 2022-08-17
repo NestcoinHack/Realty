@@ -300,10 +300,10 @@ const PropertyCard = ({
         {inVault ? <Button
               variant="outline"
               colorScheme="blue"
-              size={{ base: "sm", md: "md" }}
-              w={{ base: "auto", md: "100%" }}
+              size="md" 
+              w="100%"
               onClick={() => navigate("/vault")}
-              mb={2}
+              my={2}
             >
               View in vault
             </Button> : null}
