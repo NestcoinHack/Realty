@@ -18,8 +18,8 @@ import tokenAbi from "../contracts/token_abi.json";
 import { ethers } from "ethers";
 import ApproveModal from "./ApproveModal";
 import { useNavigate } from "react-router-dom";
-import vaultContractAddress from "../contracts/vault_address.json";
-import vaultAbi from "../contracts/vault_abi.json";
+import vaultContractAddress from "../contracts/realtyVault_address.json";
+import vaultAbi from "../contracts/realtyVault_abi.json";
 
 const PropertyCard = ({
   src,
@@ -32,50 +32,13 @@ const PropertyCard = ({
   currentAccount,
   buyer,
   reload, 
-  setReload
+  setReload,
+  inVault
 }) => {
   let navigate = useNavigate();
-
-  const handleSave = async () => {
-    // window.localStorage.setItem('image', src)
-    // window.localStorage.setItem('property name', propertyName)
-    // window.localStorage.setItem('id', id)
-    // window.localStorage.setItem('price', price)
-    // window.localStorage.setItem('description', description)
-    // navigate('/save-to-buy')
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const vaultContract = new ethers.Contract(
-          vaultContractAddress.contractAddress,
-          vaultAbi.abi,
-          signer
-        );
-
-        let vaultTxn = await vaultContract.addProperty(
-          id,
-          price,
-          tokenAddress.contractAddress
-        );
-        await vaultTxn.wait();
-        console.log(vaultTxn);
-        window.localStorage.setItem("description", description);
-        window.localStorage.setItem("image", src);
-        window.localStorage.setItem("property name", propertyName);
-
-        navigate("/save-to-buy");
-      } else {
-        console.log("ethereum object does not exist!");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const [loading, setLoading] = useState(false);
   const [purchase, setPurchase] = useState(false);
+  const [ processing, setProcessing ] = useState(false);
   const toast = useToast();
 
   const conv = (x) => {
@@ -148,6 +111,7 @@ const PropertyCard = ({
       });
     }
   };
+
   const purchaseProperty = async () => {
     setPurchase(true);
     try {
@@ -198,6 +162,65 @@ const PropertyCard = ({
     }
   };
 
+  const handleSave = async () => {
+    setProcessing(true);
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const vaultContract = new ethers.Contract(
+          vaultContractAddress.contractAddress,
+          vaultAbi,
+          signer
+        );
+
+        let vaultTxn = await vaultContract.addToMyVault(
+          id,
+          conv(price),
+          "TUSDT",
+          tokenAddress.contractAddress
+        );
+        await vaultTxn.wait();
+        setProcessing(false);
+        toast({
+          title: "Great!",
+          description: "You have added this property to your vault",
+          status: "success",
+          duration: 1500,
+          variant: "subtle",
+          isClosable: true,
+        });
+        setReload(!reload);
+        
+      } else {
+        console.log("ethereum object does not exist!");
+        setProcessing(false);
+        toast({
+          title: "Oppps!",
+          description: "You need to connect your metamask wallet",
+          status: "info",
+          duration: 3000,
+          variant: "subtle",
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      setProcessing(false);
+      toast({
+        title: "Oppps!",
+        description: error.data.message,
+        status: "error",
+        duration: 3000,
+        variant: "subtle",
+        isClosable: true,
+      });
+    }
+    
+  };
+
+
   return (
     <Box
       w={{ base: "100%", md: "40%", lg: "30%" }}
@@ -207,6 +230,7 @@ const PropertyCard = ({
       id={id}
       mb={3}
     >
+      {console.log(inVault)}
       <Image
         src={src}
         alt="property-img"
@@ -254,6 +278,12 @@ const PropertyCard = ({
             Property listed by you
           </Alert>
         ) : null}
+        {inVault ? (
+          <Alert status="info" fontSize="12px" mb={2}>
+            <AlertIcon />
+            Property has been added to your vault
+          </Alert>
+        ) : null}
         {buyer.toLowerCase() === currentAccount ? (
           <Alert status="success" fontSize="12px" mb={2}>
             <AlertIcon />
@@ -267,14 +297,24 @@ const PropertyCard = ({
             Property has been bought
           </Alert>
         ) : null}
+        {inVault ? <Button
+              variant="outline"
+              colorScheme="blue"
+              size={{ base: "sm", md: "md" }}
+              w={{ base: "auto", md: "100%" }}
+              onClick={() => navigate("/vault")}
+              mb={2}
+            >
+              View in vault
+            </Button> : null}
         {address.toLowerCase() !== currentAccount &&
         buyer.toLowerCase() !== currentAccount &&
-        buyer === "0x000000000000000000000000000000000000dEaD" ? (
+        buyer === "0x000000000000000000000000000000000000dEaD" &&
+        !inVault ? (
           <Flex
             direction={{ base: "row", md: "column" }}
             justifyContent={{ base: "space-between", md: "center" }}
           >
-            {console.log("here")}
             <Button
               variant="outline"
               colorScheme="blue"
@@ -293,6 +333,7 @@ const PropertyCard = ({
               w={{ base: "auto", md: "100%" }}
               colorScheme="green"
               mb={2}
+              isLoading={processing}
             >
               Save to buy
             </Button>

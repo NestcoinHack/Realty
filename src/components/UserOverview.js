@@ -134,7 +134,7 @@ const   UserOverview = ({currentAccount}) => {
                 mr={{base:"0",md:"8"}}
                 borderTopRightRadius="10%"
                 borderBottomLeftRadius="10%"
-                onClick={()=> navigate("/save-to-buy")}
+                onClick={()=> navigate("/vault")}
                 textAlign="center"
                 cursor="pointer"
               >
