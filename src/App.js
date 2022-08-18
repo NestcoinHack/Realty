@@ -226,8 +226,11 @@ function App() {
       return e.buyer === "0x000000000000000000000000000000000000dEaD" && (e.address.toLowerCase()) === currentAccount
     })
 
+    useEffect(()=> {
+      checkIfWalletIsConnected();
+    },[])
+
   useEffect(() => {
-    checkIfWalletIsConnected();
     if(currentAccount){
       fetchProperties();
       fetchVault();

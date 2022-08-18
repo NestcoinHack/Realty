@@ -130,7 +130,7 @@ const VaultCard = ({
 
         let vaultTxn = await vaultContract.depositToProperty(
           id,
-          depositAmount
+          depositAmount  
         );
         await vaultTxn.wait();
         console.log("vault txn", vaultTxn);
@@ -175,7 +175,9 @@ const VaultCard = ({
           abi,
           signer
         );
-        await vaultContract.withdrawTokens( id );
+        const trx =  await vaultContract.withdrawTokens( id );
+
+        await trx.wait();
         toast({
           title:"Successful!",
           description:"Amount successfully withdrawn from savings vault",
@@ -224,7 +226,7 @@ const VaultCard = ({
           variant:"subtle",
           isClosable:true,
         })
-        deposit()
+        await deposit()
          
       } else {
         console.log("ethereum object does not exist!");

@@ -177,7 +177,7 @@ const PropertyCard = ({
 
         let vaultTxn = await vaultContract.addToMyVault(
           id,
-          conv(price),
+          price,
           "TUSDT",
           tokenAddress.contractAddress
         );

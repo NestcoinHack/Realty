@@ -13,6 +13,8 @@ const Save = ({vault, processing, properties, reload, setReload}) => {
 
     return(
         <Box>
+          {console.log(vault)}
+          {/* {console.log(conv(vault[0]?.amountSaved))} */}
            <Text
             fontSize={{ base: "25px", lg: "30px" }}
             color="blue.400"
