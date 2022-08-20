@@ -22,6 +22,7 @@
     "react-scripts": "5.0.1",
     "solidity-coverage": "^0.7.21",
     "web-vitals": "^2.1.4",
+    "web3.storage": "^4.3.0",
     "yup": "^0.32.11"
   },
   "scripts": {

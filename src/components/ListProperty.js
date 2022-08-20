@@ -12,11 +12,12 @@ import { BsHouseDoor } from "react-icons/bs";
 import { GoLocation } from "react-icons/go"
 import { GiToken } from "react-icons/gi"
 import SellImg from "../assets/svg/sell-house.svg"
-import { ImageUpload } from "react-ipfs-uploader"
 import ApproveModal from "./ApproveModal"
 import MintModal from "./MintModal"
 import Logo from "../assets/svg/1.svg";
 import { useNavigate } from "react-router-dom";
+import ImageUpload from "./ImageUpload"
+import { storeFiles } from "../utils/store"
 
 const ListProperty = ({reload, setReload}) => {
   const navigate = useNavigate()
@@ -49,6 +50,8 @@ const ListProperty = ({reload, setReload}) => {
     const [imageUrl, setImageUrl] = useState("");
     const [ isApproved, setIsApproved] = useState(false)
     const [ loading, setLoading] = useState(false)
+    const [ imageLoading, setImageLoading] = useState(false)
+    const [ imageData, setImageData] = useState("")
     const [isMintLoading, setIsMintLoading] = useState(false)
 
     const {
@@ -179,6 +182,21 @@ const ListProperty = ({reload, setReload}) => {
         }
     }
 
+    const handleImageUpload = async(e) => {
+      console.log(e.target.files)
+      setImageLoading(true)
+      await setImageData(e.target.files[0].name)
+      try {
+       const res = await storeFiles(e.target.files, e.target.files[0].name)
+       setImageUrl("https://cloudflare-ipfs.com/ipfs/" + res)
+       setImageLoading(false)
+      } catch (error) {
+        console.log(error)
+       setImageLoading(false)
+       setImageData("")
+      }
+    }
+
     return (
         <>
         <Flex
@@ -205,15 +223,7 @@ const ListProperty = ({reload, setReload}) => {
                 p={5}
                 borderTopRightRadius={{ base: '0px', md: '10px' }}
                 borderBottomRightRadius={{ base: '0px', md: '10px' }}
-            >
-                {!imageUrl ? <Box minH="50vh">
-                    <Heading fontWeight="700" fontSize={{base:"20px", md:"25px"}} mb={10} color="blue.400" display="flex">
-                        Become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/>  agent
-                    </Heading>
-                    <Text mb={5} fontWeight="700">Upload property picture</Text>
-                    <ImageUpload setUrl={setImageUrl}/>
-                </Box> :
-
+            >       
                 <Formik
                     initialValues={{
                         name:'',
@@ -253,6 +263,7 @@ const ListProperty = ({reload, setReload}) => {
                             console.log("ethereum object does not exist!");
                             resetForm()
                             setImageUrl("")
+                            setImageData("")
                             toast({
                               title:"Oppps!",
                               description:"You need to connect your metamask wallet",
@@ -266,6 +277,7 @@ const ListProperty = ({reload, setReload}) => {
                           console.log(error);
                           resetForm()
                           setImageUrl("")
+                          setImageData("")
                           toast({
                               title:"Oppps!",
                               description:error.data.message,
@@ -283,6 +295,17 @@ const ListProperty = ({reload, setReload}) => {
                                 Become a <Image src={Logo} alt="logo" h="40px" w="auto" mx={2} mt="-2px"/>  agent
                             </Heading>
                             <Box textAlign="left">
+                              <Text
+                                fontSize="md"
+                                fontWeight="700"
+                                marginBottom={2}
+                              >Upload property image</Text>  
+                               <ImageUpload
+                                  url={imageUrl}
+                                  loading={imageLoading}
+                                  handleImage={handleImageUpload}
+                                  imageData={imageData}
+                                />
                                 <Input
                                   label="Property name"
                                   name="name"
@@ -353,7 +376,6 @@ const ListProperty = ({reload, setReload}) => {
                         </Form>
                     )}
                 </Formik>
-                }
             </Box>
         </Flex>
         <ApproveModal isOpen={isOpenModal} onClose={onCloseModal} approve={approve} loading={loading}/>
