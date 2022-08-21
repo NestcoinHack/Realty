@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Vault{
     using SafeERC20 for IERC20;
+    
+    //property struct
     struct property{
         uint256 propertyId;
         uint256 price;
@@ -14,6 +16,7 @@ contract Vault{
         address tokenAddress;
     }
 
+    // contract events
     event Deposit(address _depositor, uint256 _amount, uint256 _id);
     event Withdrawal(address _withdrawer, uint256 _amount, uint256 _id);
     event AddToVault(address _user, uint256 _id);
