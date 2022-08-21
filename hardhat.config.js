@@ -1,6 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require('dotenv').config();
 require('solidity-coverage')
+require("@nomiclabs/hardhat-etherscan")
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -12,7 +13,7 @@ require('solidity-coverage')
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const { API_URL, PRIVATE_KEY } = process.env;
+const { API_URL, PRIVATE_KEY, POLYGONSCAN_API_KEY  } = process.env;
 const defaultNetwork = "polygon_mumbai"
 // const defaultNetwork = "hardhat"
 
@@ -34,7 +35,9 @@ module.exports = {
       },
     },
   },
-  
+  etherscan: {
+    apiKey: `${POLYGONSCAN_API_KEY}`
+  },
   paths: {
     sources: "./contracts",
     tests: "./test",

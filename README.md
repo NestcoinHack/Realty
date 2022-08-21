@@ -52,11 +52,11 @@ https://user-images.githubusercontent.com/74747245/180320632-fa6b2b1f-28d4-43be-
 
 ## Deployments
 - Live Site : [Realty](https://realty-app.netlify.app)
-- Contract address : [Realty on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5)
-- Verified Contract : [Realty contract on polygon scan](https://mumbai.polygonscan.com/address/0xfb5D1FB4D944AED05938fDD906D8A855187Fb6a5#codePS)
+
+- Contract address : [Realty on polygon scan](https://mumbai.polygonscan.com/address/0x5f3744423Df56F7B203d3bd57e27Afb6fbf53093)
+- Verified Contract : [Realty contract on polygon scan](https://mumbai.polygonscan.com/address/0x5f3744423Df56F7B203d3bd57e27Afb6fbf53093#code)
 - Contract address : [RealtyVault on polygon scan](https://mumbai.polygonscan.com/address/0xd05e082331373bb6420d97bf7ea832fbe545c882)
 -Verified Contract : [RealtyVault on polygon scan](https://mumbai.polygonscan.com/address/0xD05E082331373BB6420D97Bf7Ea832fBe545c882#code)
-
 
 
 To run locally :
