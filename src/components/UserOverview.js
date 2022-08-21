@@ -45,7 +45,7 @@ const   UserOverview = ({currentAccount}) => {
 
     return (
       <>
-        <Heading fontSize="25px" fontWeight="700" color="blue.400" mt={10}>TUSDT Balance: {balance} USDT</Heading>
+        <Heading fontSize="25px" fontWeight="700" color="blue.400" mt={10}>TUSDT Balance: {balance} TUSDT</Heading>
         <Flex wrap="wrap" py={10} justifyContent="space-around">  
 
           <Box

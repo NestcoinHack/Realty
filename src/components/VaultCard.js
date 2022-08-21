@@ -15,7 +15,8 @@ import {
   AlertIcon,
   Flex,
   useDisclosure,
-  useToast
+  useToast,
+  Progress
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
@@ -102,11 +103,13 @@ const VaultCard = ({
         })
         setRemoving(false)
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
       toast({
         title:"Error!",
-        description:error.data.message,
+        description:x.message,
         status:"error",
         duration:3000,
         variant:"subtle",
@@ -130,7 +133,7 @@ const VaultCard = ({
 
         let vaultTxn = await vaultContract.depositToProperty(
           id,
-          depositAmount  
+          ethers.utils.parseEther(depositAmount.toString())  
         );
         await vaultTxn.wait();
         console.log("vault txn", vaultTxn);
@@ -153,8 +156,18 @@ const VaultCard = ({
         onClose()
 
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
+      toast({
+        title:"Error!",
+        description:x.message,
+        status:"error",
+        duration:3000,
+        variant:"subtle",
+        isClosable:true,
+      })
       setIsDeposit(false)
       setDepositAmount(null);
       onClose()
@@ -194,8 +207,18 @@ const VaultCard = ({
         setIsWithdrawing(false)
 
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
+      toast({
+        title:"Error!",
+        description:x.message,
+        status:"error",
+        duration:3000,
+        variant:"subtle",
+        isClosable:true,
+      })
       setIsWithdrawing(false)
     }
   };
@@ -234,34 +257,24 @@ const VaultCard = ({
         setDepositAmount(null)
         setIsDeposit(false)
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
       onClose()
+      toast({
+        title:"Error!",
+        description:x.message,
+        status:"error",
+        duration:3000,
+        variant:"subtle",
+        isClosable:true,
+      })
       setDepositAmount(null)
       setIsDeposit(false)
     }
 };
 
-// useEffect(() => {
-//   let vaultContract;
-
-//   const onNewTransaction = (amount) => {
-//     setDepositAmount(amount)
-//   };
-
-//   if (window.ethereum) {
-//     const provider = new ethers.providers.Web3Provider(window.ethereum);
-//     const signer = provider.getSigner();
-//     vaultContract = new ethers.Contract(contractAddress.contractAddress, abi.abi, signer);
-//     vaultContract.on("deposit", onNewTransaction);
-//   }
-
-//   return () => {
-//     if (vaultContract) {
-//       vaultContract.off("deposit", onNewTransaction);
-//     }
-//   };
-// }, []);
 
   return (
     <Box mb={3}>
@@ -285,15 +298,16 @@ const VaultCard = ({
         >
           {details.name}
         </Text>
+        <Progress hasStripe colorScheme="green" value={(amountSaved/price) * 100}/>
         <Alert status="info" fontSize="12px" mb={2}>
             <AlertIcon />
             <Text color="gray" fontWeight={700}>
               You have deposited{" "}
               <Text as="span" color="blue.400">
                 {" "}
-                {amountSaved}
+                {amountSaved / (10 ** 18)}
               </Text>{" "}
-              out of {price} {tokenSymbol}
+              out of {price / (10 ** 18)} {tokenSymbol}
             </Text>
         </Alert>
         <Flex
@@ -311,6 +325,7 @@ const VaultCard = ({
             onClick={onOpen}
             mb={2}
             isLoading={isDeposit}
+            disabled={amountSaved === price ? true :false}
           >
             Deposit
           </Button>

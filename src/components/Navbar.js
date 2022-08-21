@@ -65,7 +65,7 @@ export default function Navbar({currentAccount, connectWallet, disconnectWallet}
           justify={{ base: "center", md: "start" }}
           alignItems="center"
         >
-          <Link href='/' _hover={{textDecoration: 'none'}}>
+          <Link href='/#' _hover={{textDecoration: 'none'}}>
           <Image src={Logo} alt="logo" h={{base:"40px", md:"70px" }} w="auto" ml={{base:"-30px", md:"0px"}}/>
           
           </Link>
@@ -268,15 +268,15 @@ const MobileNavItem = ({ label, children, href }) => {
 const NAV_ITEMS = [
   {
     label: "Dashboard",
-    href: "/user",
+    href: "#/user",
   },
   {
     label: "Featured Properties",
-    href: "/properties",
+    href: "#/properties",
   },
   {
     label: "List Property",
-    href: "/list-property",
+    href: "#/list-property",
   },
   ]
 //   {

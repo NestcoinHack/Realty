@@ -47,7 +47,7 @@ const ListProperty = ({reload, setReload}) => {
           .required("Token type is required"),
     });
     const toast = useToast()
-    const [imageUrl, setImageUrl] = useState("");
+    const [imageCid, setImageCid] = useState("");
     const [ isApproved, setIsApproved] = useState(false)
     const [ loading, setLoading] = useState(false)
     const [ imageLoading, setImageLoading] = useState(false)
@@ -107,13 +107,15 @@ const ListProperty = ({reload, setReload}) => {
               isClosable:true,
             })
           }
-        } catch (error) {
-          console.log(error);
+        } catch (r) {
+          console.log(r);
           setLoading(false)
           onCloseModal()
-          toast({
-              title:"Oppps!",
-              description:error.data.message,
+          let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+            x = JSON.parse(`{${x}}`)
+            toast({
+              title:"Error!",
+              description:x.message,
               status:"error",
               duration:3000,
               variant:"subtle",
@@ -149,14 +151,14 @@ const ListProperty = ({reload, setReload}) => {
             })
             setIsMintLoading(false)
             onMintClose()
-            setImageUrl("")
+            setImageCid("")
             setReload(!reload)
             navigate("/properties")
           } else {
             console.log("ethereum object does not exist!");
             setIsMintLoading(false)
             onMintClose()
-            setImageUrl("")
+            setImageCid("")
             toast({
               title:"Oppps!",
               description:"You need to connect your metamask wallet",
@@ -166,14 +168,16 @@ const ListProperty = ({reload, setReload}) => {
               isClosable:true,
             })
           }
-        } catch (error) {
-          console.log(error);
+        } catch (r) {
+          console.log(r);
           setIsMintLoading(false)
             onMintClose()
-            setImageUrl("")
+            setImageCid("")
+            let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+            x = JSON.parse(`{${x}}`)
             toast({
-              title:"Oppps!",
-              description:error.data.message,
+              title:"Error!",
+              description:x.message,
               status:"error",
               duration:3000,
               variant:"subtle",
@@ -188,7 +192,7 @@ const ListProperty = ({reload, setReload}) => {
       await setImageData(e.target.files[0].name)
       try {
        const res = await storeFiles(e.target.files, e.target.files[0].name)
-       setImageUrl("https://cloudflare-ipfs.com/ipfs/" + res)
+       setImageCid(res)
        setImageLoading(false)
       } catch (error) {
         console.log(error)
@@ -234,8 +238,7 @@ const ListProperty = ({reload, setReload}) => {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={ async (values, { setSubmitting, resetForm }) => {  
-                        console.log(values)
-                        console.log(imageUrl)
+            
                         try {
                           const { ethereum } = window;
                           if (ethereum) {
@@ -246,7 +249,7 @@ const ListProperty = ({reload, setReload}) => {
                               abi.abi,
                               signer
                             );
-                            let list = await PropertyNftContract.listProperty(values.name, values.amount, values.location, values.symbol, values.description, imageUrl );
+                            let list = await PropertyNftContract.listProperty(values.name, ethers.utils.parseEther((values.amount).toString()), values.location, values.symbol, values.description, imageCid );
                                 
                             await list.wait();
                             toast({
@@ -262,7 +265,7 @@ const ListProperty = ({reload, setReload}) => {
                           } else {
                             console.log("ethereum object does not exist!");
                             resetForm()
-                            setImageUrl("")
+                            setImageCid("")
                             setImageData("")
                             toast({
                               title:"Oppps!",
@@ -273,19 +276,21 @@ const ListProperty = ({reload, setReload}) => {
                               isClosable:true,
                             })
                           }
-                        } catch (error) {
-                          console.log(error);
+                        } catch (r) {
+                          console.log(r);
                           resetForm()
-                          setImageUrl("")
+                          setImageCid("")
                           setImageData("")
+                          let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+                          x = JSON.parse(`{${x}}`)
                           toast({
-                              title:"Oppps!",
-                              description:error.data.message,
-                              status:"error",
-                              duration:3000,
-                              variant:"subtle",
-                              isClosable:true,
-                            })
+                            title:"Error!",
+                            description:x.message,
+                            status:"error",
+                            duration:3000,
+                            variant:"subtle",
+                            isClosable:true,
+                          })
                         }
                     }}
                 >
@@ -301,7 +306,7 @@ const ListProperty = ({reload, setReload}) => {
                                 marginBottom={2}
                               >Upload property image</Text>  
                                <ImageUpload
-                                  url={imageUrl}
+                                  url={imageCid !== "" ? `https://cloudflare-ipfs.com/ipfs/${imageCid}` : ""}
                                   loading={imageLoading}
                                   handleImage={handleImageUpload}
                                   imageData={imageData}
@@ -351,7 +356,7 @@ const ListProperty = ({reload, setReload}) => {
                                 <Flex mb={3} mt={5} justify="space-around">
                                     <Button 
                                         colorScheme="blue.400" 
-                                        isDisabled={Object.keys(errors).length > 0 || imageUrl=== "" || isApproved ? true : false}
+                                        isDisabled={Object.keys(errors).length > 0 || imageCid=== "" || isApproved ? true : false}
                                         variant="outline"
                                         onClick={onOpenModal}
                                         w="45%"
@@ -363,7 +368,7 @@ const ListProperty = ({reload, setReload}) => {
                                         bg="blue.400" 
                                         color="white"
                                         isLoading={isSubmitting}
-                                        isDisabled={Object.keys(errors).length > 0 || imageUrl === ""  || !isApproved ? true : false}
+                                        isDisabled={Object.keys(errors).length > 0 || imageCid === ""  || !isApproved ? true : false}
                                         type="submit" 
                                         w="45%"
                                     >

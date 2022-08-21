@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import ListProperty from "./components/ListProperty";
 import { Box, useToast } from "@chakra-ui/react";
@@ -29,7 +29,9 @@ function App() {
   const urlLoader = (url) => {
     if(url.slice(0,22) === "https://ipfs.infura.io"){
       return "https://cloudflare-ipfs.com" + url.slice(22);
-    } else{
+    } else if(url.slice(0,5) !== "https"){
+      return "https://cloudflare-ipfs.com/ipfs/" + url; //cid parser
+    } else {
       return url
     }
   }
@@ -244,13 +246,13 @@ function App() {
       fontFamily="'Poppins', sans-serif"
       bgColor="#FAFAFA"
     >
-      <BrowserRouter>
+      <HashRouter>
         <Navbar currentAccount={currentAccount} connectWallet={connectWallet} disconnectWallet={disconnectWallet}/>
         <Box minH="76vh">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route exact path="/" element={<Home />} />
           <Route path="/admin/set-payment-token" element={<SetPaymentToken />} />
-          <Route path="list-property" element={<ListProperty reload={reload} setReload={setReload}/>} />
+          <Route path="/list-property" element={<ListProperty reload={reload} setReload={setReload}/>} />
           <Route path="/admin/send-token" element={<Admin />} />
           <Route path="/properties" element={<Properties currentAccount={currentAccount} properties={properties} loading={loading} reload={reload} setReload={setReload} vault={vault}/>} processing={processing}/>
           <Route path="/properties/on-sale" element={<Properties currentAccount={currentAccount} properties={unsoldProperties} loading={loading} reload={reload} setReload={setReload} vault={vault} processing={processing}/>} />
@@ -261,7 +263,7 @@ function App() {
         </Routes>
         </Box>
         <Footer />
-      </BrowserRouter>
+      </HashRouter>
     </Box>
   );
 }

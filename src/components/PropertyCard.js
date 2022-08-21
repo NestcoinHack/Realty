@@ -54,9 +54,6 @@ const PropertyCard = ({
 
   const approve = async () => {
     setLoading(true);
-    let amount = conv(price);
-    amount = ethers.utils.parseEther(amount.toString());
-
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -69,7 +66,7 @@ const PropertyCard = ({
         );
         let approval = await TokenContract.approve(
           contractAddress.contractAddress,
-          amount
+          price
         );
 
         await approval.wait();
@@ -97,13 +94,15 @@ const PropertyCard = ({
           isClosable: true,
         });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
       setLoading(false);
       onCloseModal();
       toast({
         title: "Oppps!",
-        description: error.data.message,
+        description: x.message,
         status: "error",
         duration: 3000,
         variant: "subtle",
@@ -148,12 +147,14 @@ const PropertyCard = ({
           isClosable: true,
         });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
       setPurchase(false);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
       toast({
         title: "Oppps!",
-        description: error.data.message,
+        description: x.message,
         status: "error",
         duration: 3000,
         variant: "subtle",
@@ -205,12 +206,14 @@ const PropertyCard = ({
           isClosable: true,
         });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (r) {
+      console.log(r);
       setProcessing(false);
+      let x = r.toString().split("}")[0].split("{")[1].replace(',"data":', "")
+      x = JSON.parse(`{${x}}`)
       toast({
         title: "Oppps!",
-        description: error.data.message,
+        description: x.message,
         status: "error",
         duration: 3000,
         variant: "subtle",
@@ -266,7 +269,7 @@ const PropertyCard = ({
           {propertyName}
         </Box>
 
-        <Box mb={2}>{conv(price)} TUSDT</Box>
+        <Box mb={2}>{(conv(price)) / (10 ** 18)} TUSDT</Box>
 
         <Box mb={2}>
           <Text>{description}</Text>
