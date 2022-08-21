@@ -230,12 +230,12 @@ const ListProperty = ({reload, setReload}) => {
                         description:'',
                         location:'',
                         amount:0,
-                        symbol:'',
-                        imageUrl: imageUrl
+                        symbol:''
                     }}
                     validationSchema={validationSchema}
                     onSubmit={ async (values, { setSubmitting, resetForm }) => {  
                         console.log(values)
+                        console.log(imageUrl)
                         try {
                           const { ethereum } = window;
                           if (ethereum) {
@@ -246,7 +246,7 @@ const ListProperty = ({reload, setReload}) => {
                               abi.abi,
                               signer
                             );
-                            let list = await PropertyNftContract.listProperty(values.name, values.amount, values.location, values.symbol, values.description, values.imageUrl );
+                            let list = await PropertyNftContract.listProperty(values.name, values.amount, values.location, values.symbol, values.description, imageUrl );
                                 
                             await list.wait();
                             toast({

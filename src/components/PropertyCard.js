@@ -230,7 +230,6 @@ const PropertyCard = ({
       id={id}
       mb={3}
     >
-      {console.log(inVault)}
       <Image
         src={src}
         alt="property-img"
