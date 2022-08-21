@@ -30,7 +30,7 @@ const Properties = ({currentAccount, properties, loading, reload, setReload, vau
 			{properties && properties.length === 0 ? 
 				<Box mx="auto" my="auto" textAlign="center" w="100%">
 					<TbHomeOff style={{fontSize:"200px", fill:"blue.400", strokeWidth:1, margin:"auto"}}/>
-					<Text fontSize="14px" mt={3} >Sorry, no listing found. <Link href="/list-property">List a property</Link></Text>
+					<Text fontSize="14px" mt={3} >Sorry, no listing found. <Link href="/#/list-property">List a property</Link></Text>
 				</Box> : null
 			}
        		{properties && properties.map( property => (

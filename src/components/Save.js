@@ -32,7 +32,7 @@ const Save = ({vault, processing, properties, reload, setReload}) => {
        	</Flex> :
           vault.length === 0 ? (<Box mx="auto" my="auto" textAlign="center" w="100%">
 					<TbKeyOff style={{fontSize:"200px", strokeWidth:1 , margin:"auto"}}/>
-					<Text fontSize="14px" mt={3} >Sorry, your vault is empty. <Link href="/properties">View all properties</Link></Text>
+					<Text fontSize="14px" mt={3} >Sorry, your vault is empty. <Link href="/#/properties">View all properties</Link></Text>
 				</Box>) :
           <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(2,1fr)', lg:'repeat(3, 1fr)'}} gap={6}>
            { vault && vault.map((item, index) => (

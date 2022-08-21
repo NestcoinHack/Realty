@@ -1,4 +1,4 @@
-# REALTY - [Visit Realty](https://realty-app.netlify.app)
+# REALTY - [Visit Realty](https://realty-93t6v.spheron.app/#)
 Realty is a proof of concept solution for crypto-based real estate purchase/payments with stablecoins. It builds on the idea of having another option for asset listing, investment, saving and payments in the real-estate ecosystem aside fiat currency.
 
 ## Project track 
@@ -25,13 +25,13 @@ https://user-images.githubusercontent.com/74747245/180320632-fa6b2b1f-28d4-43be-
 
 ## Using the dApp
 - Connect Metamask(on Mumbai testnet)
-- Visit [Featured Properties](https://realty-app.netlify.app/properties) from the navbar to see the available assets that have been listed.
-- Click [`List Property`](https://realty-app.netlify.app/list-property) on the navbar to list asset.
+- Visit [Featured Properties](https://realty-93t6v.spheron.app/#/properties) from the navbar to see the available assets that have been listed.
+- Click [`List Property`](https://realty-93t6v.spheron.app/#/list-property) on the navbar to list asset.
 - DM [us](https://twitter.com/adedotxn) with your address for [TUSDT](https://mumbai.polygonscan.com/address/0x4A80319043e4f56562212C10Ad86cDe28083cB10) needed to test listing on the dapp.
 - Approve realty to list your asset for your price
 - Fill the listing form and List your asset
 - Mint an NFT for the asset right after you've submitted the asset for listing.
-- Check [`Featured Properties`](https://realty-app.netlify.app/properties) to view your publicly listed asset.
+- Check [`Featured Properties`](https://realty-93t6v.spheron.app/#/properties) to view your publicly listed asset.
 - Click on Save to buy to add a listing to your savings vault. 
 - Click deposit, to deposit token amount into user vault.
 - Click on withdraw to withdraw all tokens saved on a particular listing.
@@ -51,7 +51,7 @@ https://user-images.githubusercontent.com/74747245/180320632-fa6b2b1f-28d4-43be-
 - Spheron
 
 ## Deployments
-- Live Site : [Realty](https://realty-app.netlify.app)
+- Live Site on Spheron: [Realty](https://realty-93t6v.spheron.app/#)
 
 - Contract address : [Realty on polygon scan](https://mumbai.polygonscan.com/address/0x5f3744423Df56F7B203d3bd57e27Afb6fbf53093)
 - Verified Contract : [Realty contract on polygon scan](https://mumbai.polygonscan.com/address/0x5f3744423Df56F7B203d3bd57e27Afb6fbf53093#code)
